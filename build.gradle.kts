@@ -24,8 +24,12 @@ sourceSets {
             srcDir("src/parserLib/generated")
         }
     }
+    val lexerImpl by creating {
+        dependsOn(lexerLib)
+    }
     val main by getting {
         dependsOn(lexerLib)
+        dependsOn(lexerImpl)
         dependsOn(parserLib)
     }
 }
