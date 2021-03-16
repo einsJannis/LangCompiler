@@ -2,7 +2,6 @@ package dev.einsjannis
 
 interface Tuple<B> : Iterable<B>
 
-
 interface Tuple0<B> : Tuple<B> {
     
     override fun iterator(): Iterator<B> = listOf<B>().iterator()
@@ -435,35 +434,55 @@ fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, 
 }
 
 
-operator fun <B, T> Tuple0<B>.plus(value: T) = tupleOf(value)
+fun <B : BASE, T : BASE, BASE> Tuple<B>.plus(value: T): Tuple<BASE> = when (this) {
+    is Tuple0<B, > -> this.plus(value)
+    is Tuple1<B, *> -> this.plus(value)
+    is Tuple2<B, *, *> -> this.plus(value)
+    is Tuple3<B, *, *, *> -> this.plus(value)
+    is Tuple4<B, *, *, *, *> -> this.plus(value)
+    is Tuple5<B, *, *, *, *, *> -> this.plus(value)
+    is Tuple6<B, *, *, *, *, *, *> -> this.plus(value)
+    is Tuple7<B, *, *, *, *, *, *, *> -> this.plus(value)
+    is Tuple8<B, *, *, *, *, *, *, *, *> -> this.plus(value)
+    is Tuple9<B, *, *, *, *, *, *, *, *, *> -> this.plus(value)
+    is Tuple10<B, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)
+    is Tuple11<B, *, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)
+    is Tuple12<B, *, *, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)
+    is Tuple13<B, *, *, *, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)
+    is Tuple14<B, *, *, *, *, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)
+    else -> throw UnsupportedOperationException()
+}
 
-operator fun <B, T0 : B, T> Tuple1<B, T0>.plus(value: T) = tupleOf(component1(), value)
 
-operator fun <B, T0 : B, T1 : B, T> Tuple2<B, T0, T1>.plus(value: T) = tupleOf(component1(), component2(), value)
+operator fun <B : BASE, T : BASE, BASE> Tuple0<B>.plus(value: T) = tupleOf(value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T> Tuple3<B, T0, T1, T2>.plus(value: T) = tupleOf(component1(), component2(), component3(), value)
+operator fun <B : BASE, T0 : B, T : BASE, BASE> Tuple1<B, T0>.plus(value: T) = tupleOf(component1(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T> Tuple4<B, T0, T1, T2, T3>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T : BASE, BASE> Tuple2<B, T0, T1>.plus(value: T) = tupleOf(component1(), component2(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T> Tuple5<B, T0, T1, T2, T3, T4>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T : BASE, BASE> Tuple3<B, T0, T1, T2>.plus(value: T) = tupleOf(component1(), component2(), component3(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T> Tuple6<B, T0, T1, T2, T3, T4, T5>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T : BASE, BASE> Tuple4<B, T0, T1, T2, T3>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T> Tuple7<B, T0, T1, T2, T3, T4, T5, T6>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T : BASE, BASE> Tuple5<B, T0, T1, T2, T3, T4>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T> Tuple8<B, T0, T1, T2, T3, T4, T5, T6, T7>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T : BASE, BASE> Tuple6<B, T0, T1, T2, T3, T4, T5>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T> Tuple9<B, T0, T1, T2, T3, T4, T5, T6, T7, T8>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T : BASE, BASE> Tuple7<B, T0, T1, T2, T3, T4, T5, T6>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T> Tuple10<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T : BASE, BASE> Tuple8<B, T0, T1, T2, T3, T4, T5, T6, T7>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T> Tuple11<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T : BASE, BASE> Tuple9<B, T0, T1, T2, T3, T4, T5, T6, T7, T8>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T> Tuple12<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T : BASE, BASE> Tuple10<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B, T> Tuple13<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), component13(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T : BASE, BASE> Tuple11<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), value)
 
-operator fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B, T13 : B, T> Tuple14<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), component13(), component14(), value)
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T : BASE, BASE> Tuple12<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), value)
+
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B, T : BASE, BASE> Tuple13<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), component13(), value)
+
+operator fun <B : BASE, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B, T13 : B, T : BASE, BASE> Tuple14<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>.plus(value: T) = tupleOf(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), component13(), component14(), value)
 
 
 fun <B, T> Tuple0<B>.castTo(constructor: () -> T): T = constructor()

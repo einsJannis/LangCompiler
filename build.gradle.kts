@@ -17,8 +17,16 @@ sourceSets {
     val lexerLib by creating {
         dependsOn(privateLib)
     }
+    val parserLib by creating {
+        dependsOn(privateLib)
+        dependsOn(lexerLib)
+        java {
+            srcDir("src/parserLib/generated")
+        }
+    }
     val main by getting {
         dependsOn(lexerLib)
+        dependsOn(parserLib)
     }
 }
 
@@ -47,6 +55,11 @@ tasks {
     register<dev.einsjannis.gradle.kotlin.TupleGeneratorTask>("tupleGeneratorTask") {
         outputDirectory.set(file("src/privateLib/generated"))
         amountOfTuples.set(16)
+    }
+
+    register<dev.einsjannis.gradle.kotlin.compiler.parser.SequencePatternGeneratorTask>("sequencePatternTask") {
+        outputDirectory.set(file("src/parserLib/generated"))
+        amountOfSequencePatterns.set(16)
     }
 
 }

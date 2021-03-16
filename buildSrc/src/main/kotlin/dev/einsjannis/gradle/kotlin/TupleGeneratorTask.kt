@@ -28,14 +28,30 @@ abstract class TupleGeneratorTask : DefaultTask() {
 
     private fun generate(): String = """
         package dev.einsjannis
-        ${generateBaseTuple()}
-        ${generateTuples()}
+        ${generateBaseTuple()}${generateTuples()}
         ${generateTupleOfFuns()}
+        ${generateGeneralPlusFun()}
         ${generatePlusFuns()}
         ${generateCastFuns()}
     """.trimIndent()
 
-    private fun generateCastFuns(): String = template { generateCastFun(it) }
+    //language=kotlin
+    private fun generateGeneralPlusFun(): String = """
+        fun <B : BASE, T : BASE, BASE> Tuple<B>.plus(value: T): Tuple<BASE> = when (this) {
+            ${generatePlusFunMappings()}
+            else -> throw UnsupportedOperationException()
+        }
+    """
+
+    private fun generatePlusFunMappings(): String = template(amountOfTuples.get() - 1, "\n            ") {
+        generatePlusFunMapping(it)
+    }
+
+    private fun generatePlusFunMapping(index: Int) = "is Tuple$index<B, ${generateStars(index)}> -> this.plus(value)"
+
+    private fun generateStars(index: Int): String = template(index, ", ") { "*" }
+
+    private fun generateCastFuns(): String = template(amountOfTuples.get()) { generateCastFun(it) }
 
     //language=kotlin
     private fun generateCastFun(index: Int): String = """
@@ -44,9 +60,11 @@ abstract class TupleGeneratorTask : DefaultTask() {
 
     private fun generatePlusFuns(): String = template(amountOfTuples.get() - 1) { generatePlusFun(it) }
 
+    fun generateGenericsDefWithBase(index: Int) = generateGenericsDef(index, " : BASE")
+
     //language=kotlin
     private fun generatePlusFun(index: Int): String = """
-        operator fun <${generateGenericsDef(index)}, T> ${generateSuperTupleName(index)}.plus(value: T) = tupleOf(${generateValues(index).let { if (it == "") it else "${it}, " }}value)
+        operator fun <${generateGenericsDefWithBase(index)}, T : BASE, BASE> ${generateSuperTupleName(index)}.plus(value: T) = tupleOf(${generateValues(index).let { if (it == "") it else "${it}, " }}value)
     """
 
     //language=kotlin
@@ -54,7 +72,7 @@ abstract class TupleGeneratorTask : DefaultTask() {
         interface Tuple<B> : Iterable<B>
     """
 
-    private fun generateTuples(): String = template { generateTuple(it) }
+    private fun generateTuples(): String = template(amountOfTuples.get()) { generateTuple(it) }
 
     //language=kotlin
     private fun generateTuple(index: Int): String = """
@@ -72,8 +90,8 @@ abstract class TupleGeneratorTask : DefaultTask() {
             override fun iterator(): Iterator<B> = listOf<B>(${generateValues(index)}).iterator()
     """
 
-    private fun generateGenericsDef(index: Int): String = template(index, ", ") { "T$it : B" }.let {
-        if (index == 0) return@let "B" else return@let "B, $it"
+    private fun generateGenericsDef(index: Int, base: String = ""): String = template(index, ", ") { "T$it : B" }.let {
+        if (index == 0) return@let "B$base" else return@let "B$base, $it"
     }
 
     private fun generateValueName(index: Int): String = "component${index + 1}()"
@@ -85,7 +103,7 @@ abstract class TupleGeneratorTask : DefaultTask() {
 
     private fun generateValues(index: Int): String = template(index, ", ") { generateValueName(it) }
 
-    private fun generateTupleOfFuns(): String = template { generateTupleOfFun(it) }
+    private fun generateTupleOfFuns(): String = template(amountOfTuples.get()) { generateTupleOfFun(it) }
 
     //language=kotlin
     private fun generateTupleOfFun(index: Int): String = """
@@ -106,12 +124,5 @@ abstract class TupleGeneratorTask : DefaultTask() {
     }
 
     private fun generateArgsDef(index: Int): String = template(index, ", ") { "v$it: T$it" }
-
-    private fun template(
-        until: Int = amountOfTuples.get(),
-        separator: String = "",
-        prefix: String = "",
-        block: (Int) -> String
-    ): String = (0 until until).joinToString(separator, prefix, transform = block)
 
 }
