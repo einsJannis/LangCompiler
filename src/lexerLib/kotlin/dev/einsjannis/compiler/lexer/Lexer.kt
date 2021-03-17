@@ -17,8 +17,8 @@ class Lexer(private val tokens: List<TokenType>) {
         for (token in tokens) {
             val match = token.regex.find(content, index)
             if (!isMatchValid(match, atIndex = index)) continue else {
-                add(token.new(index, match.value, file))
-                return match.range.last
+                token.new(index, match.value, file)?.also { add(it) }
+                return match.range.last + 1
             }
         }
         throw UnknownTokenException(index, content, file)

@@ -1,0 +1,5 @@
+var c = 5
+
+fun f(a: Int): Int {
+    return a + c
+}

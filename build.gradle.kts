@@ -28,6 +28,13 @@ sourceSets {
         dependsOn(lexerLib)
     }
     val main by getting {
+        dependsOn(privateLib)
+        dependsOn(lexerLib)
+        dependsOn(lexerImpl)
+        dependsOn(parserLib)
+    }
+    val test by getting {
+        dependsOn(privateLib)
         dependsOn(lexerLib)
         dependsOn(lexerImpl)
         dependsOn(parserLib)
