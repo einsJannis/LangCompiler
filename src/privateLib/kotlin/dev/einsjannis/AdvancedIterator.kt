@@ -14,20 +14,29 @@ class AdvancedIterator<T>(val list: List<T>): ListIterator<T> {
 
     override fun hasPrevious(): Boolean = 1 < index
 
-    override fun next(): T = list[index++]
+    override fun next(): T = list[index].also { index++ }
 
-    override fun previous(): T = list[++index]
+    override fun previous(): T = list[--index]
 
     override fun nextIndex(): Int = index
 
     override fun previousIndex(): Int = index - 1
 
+    fun peek(): T = list[index]
+
     fun pushContext(): Unit {
         stack.push(index)
+        println("Saved index: $index")
     }
 
     fun popContext(): Unit {
         index = stack.pop()
+        println("Reset to index: $index")
+    }
+
+    fun clearContext(): Unit {
+        val poped = stack.pop()
+        println("Discarded saved index: $poped")
     }
 
     fun <T> inContext(block: () -> T): T {

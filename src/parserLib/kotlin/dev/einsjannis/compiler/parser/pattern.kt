@@ -7,32 +7,36 @@ import dev.einsjannis.compiler.lexer.Token
 import dev.einsjannis.compiler.lexer.TokenType
 import dev.einsjannis.tupleOf
 
-interface Pattern<T : Node?> {
+interface Pattern<out T : Node?> {
 
     fun match(tokens: AdvancedIterator<Token>): Match<T>
 
 }
 
-fun <T : Node?> AdvancedIterator<Token>.match(pattern: Pattern<T>) = pattern.match(this)
-
-val TokenType.pattern: Pattern<TokenNode> get() {
-    val tokenType = this
-    return object : Pattern<TokenNode> {
-
-        override fun match(tokens: AdvancedIterator<Token>): Match<TokenNode> {
-            if (tokens.hasNext()) return NoMatch(NoMatch.Cause.NoTokensLeft(tokenType))
-            val match = tokens.next()
-            if (match.type != tokenType) {
-                tokens.previous()
-                return NoMatch(NoMatch.Cause.TokenMissMatch(tokenType))
-            }
-            return ValidMatch(TokenNode(match))
-        }
-
-    }
+fun <T : Node?> AdvancedIterator<Token>.match(pattern: Pattern<T>): Match<T> {
+    println("Matching for ${pattern.name} at ${this.peek().index}")
+    val match = pattern.match(this)
+    println("Result: ${match::class.simpleName}")
+    return match
 }
 
-fun <T : Node> optional(pattern: Pattern<T>) = object : Pattern<T?> {
+class TokenPattern(val tokenType: TokenType) : Pattern<TokenNode> {
+
+    override fun match(tokens: AdvancedIterator<Token>): Match<TokenNode> {
+        if (!tokens.hasNext()) return NoMatch(NoMatch.Cause.NoTokensLeft(tokenType))
+        val token = tokens.next()
+        if (token.type != tokenType) {
+            tokens.previous()
+            return NoMatch(NoMatch.Cause.TokenMissMatch(tokenType, token))
+        }
+        return ValidMatch(TokenNode(token))
+    }
+
+}
+
+val TokenType.pattern: Pattern<TokenNode> get() = TokenPattern(this)
+
+class OptionalPattern<T : Node>(val pattern: Pattern<T>) : Pattern<T?> {
 
     override fun match(tokens: AdvancedIterator<Token>): Match<T?> {
         val match = tokens.match(pattern)
@@ -46,7 +50,9 @@ fun <T : Node> optional(pattern: Pattern<T>) = object : Pattern<T?> {
 
 }
 
-fun <T : Node> superPattern(patterns: List<Pattern<T>>) = object : Pattern<T> {
+fun <T : Node> optional(pattern: Pattern<T>) = OptionalPattern(pattern)
+
+fun <T : Node> superPattern(patterns: List<Pattern<out T>>) = object : Pattern<T> {
 
     override fun match(tokens: AdvancedIterator<Token>): Match<T> {
         val failed = mutableListOf<Tuple2<Any, Pattern<T>, NoMatch.Cause>>()
@@ -63,20 +69,23 @@ fun <T : Node> superPattern(patterns: List<Pattern<T>>) = object : Pattern<T> {
 
 }
 
-fun <E : Node, S : Node, LS : Node, LE : Node> scopePattern(elementPattern: Pattern<E>, separatorPattern: Pattern<S>, limiterPatterns: Tuple2<Pattern<*>, Pattern<LS>, Pattern<LE>>, requireTrailing: Boolean = false) = object : Pattern<ScopeNode> {
+fun <E : Node, S : Node, LS : Node?, LE : Node?, T : ScopeNode> scopePattern(elementPattern: () -> Pattern<E>, separatorPattern: Pattern<S>, limiterPatterns: Tuple2<Pattern<*>, Pattern<LS>, Pattern<LE>>, constructor: (list: List<E>) -> T, requireTrailing: Boolean = false) = object : Pattern<T> {
 
-    override fun match(tokens: AdvancedIterator<Token>): Match<ScopeNode> {
+    override fun match(tokens: AdvancedIterator<Token>): Match<T> {
         val (startPattern, endPattern) = limiterPatterns
         tokens.pushContext()
         val startMatch = tokens.match(startPattern)
-        if (startMatch is NoMatch)
+        if (startMatch is NoMatch) {
+            tokens.popContext()
             return NoMatch(NoMatch.Cause.PatternMissMatch(startPattern, startMatch.cause))
-        val list = buildList <Node> {
+        }
+        val list = buildList {
             while (true) {
-                val elementMatch = tokens.match(elementPattern)
+                val elementMatch = tokens.match(elementPattern())
                 if (elementMatch is NoMatch) {
+                    if (tokens.match(endPattern) is ValidMatch) break
                     tokens.popContext()
-                    return NoMatch(NoMatch.Cause.PatternMissMatch(elementPattern, elementMatch.cause))
+                    return NoMatch(NoMatch.Cause.PatternMissMatch(elementPattern(), elementMatch.cause))
                 }
                 val separatorMatch = tokens.match(separatorPattern)
                 if (separatorMatch is NoMatch) {
@@ -96,9 +105,8 @@ fun <E : Node, S : Node, LS : Node, LE : Node> scopePattern(elementPattern: Patt
                 if (endMatch.causedBy<NoMatch.Cause.NoTokensLeft>()) return NoMatch(NoMatch.Cause.PatternMissMatch(endPattern, endMatch.cause))
             }
         }
-        return ValidMatch(object : ScopeNode, List<Node?> by list {
-            override var parent: Node? = null
-        })
+        tokens.clearContext()
+        return ValidMatch(constructor(list))
     }
 
 }

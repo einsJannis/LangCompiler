@@ -1,12 +1,12 @@
 package dev.einsjannis.lang.compiler
 
-import dev.einsjannis.compiler.lexer.serialized
+import dev.einsjannis.compiler.parser.printTree
+import dev.einsjannis.lang.compiler.parser.parse
 import java.io.File
 
 fun main() {
     println("a")
     val file = File("testResources/code.lang")
-    val tokens = lex(file)
-    println(tokens.size)
-    tokens.forEach { println(it.serialized) }
+    val tree = parse(file)
+    tree.printTree()
 }

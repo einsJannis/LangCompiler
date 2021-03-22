@@ -43,7 +43,7 @@ abstract class TupleGeneratorTask : DefaultTask() {
         }
     """
 
-    private fun generatePlusFunMappings(): String = template(amountOfTuples.get() - 1, "\n            ") {
+    private fun generatePlusFunMappings(): String = (amountOfTuples.get() - 1).downTo(0).joinToString("\n            ") {
         generatePlusFunMapping(it)
     }
 

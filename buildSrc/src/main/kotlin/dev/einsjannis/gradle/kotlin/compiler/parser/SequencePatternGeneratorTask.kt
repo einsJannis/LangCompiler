@@ -41,7 +41,7 @@ abstract class SequencePatternGeneratorTask : DefaultTask() {
 
     //language=kotlin
     private fun generateSequencePattern(index: Int) = """
-        fun <${generateGenericsDef(index)}> sequence(patterns: Tuple$index<${generateGenericsPattern(index)}>, constructor: (Tuple$index<${generateGenerics(index)}>) -> N) = object : Pattern<N> {
+        fun <${generateGenericsDef(index)}> sequence$index(patterns: Tuple$index<${generateGenericsPattern(index)}>, constructor: (Tuple$index<${generateGenerics(index)}>) -> N) = object : Pattern<N> {
 
             @Suppress("UNCHECKED_CAST")
             override fun match(tokens: AdvancedIterator<Token>): Match<N> {
@@ -55,18 +55,19 @@ abstract class SequencePatternGeneratorTask : DefaultTask() {
                     }
                     tuple = tuple.plus(match.node)
                 }
+                tokens.clearContext()
                 return ValidMatch(constructor(tuple as Tuple$index<${generateGenerics(index)}>))
             }
 
         }
     """
 
-    private fun generateGenericsDef(index: Int) = template(index, ", ") { "T$it : Node" }.let {
+    private fun generateGenericsDef(index: Int) = template(index, ", ") { "T$it : Node?" }.let {
         if (it == "") "N : Node" else "N : Node, $it"
     }
 
     private fun generateGenerics(index: Int) = template(index, ", ") { "T$it" }.let {
-        if (it == "") "Node" else "Node, $it"
+        if (it == "") "Node?" else "Node?, $it"
     }
 
     private fun generateGenericsPattern(index: Int) = template(index, ", ") { "Pattern<T$it>" }.let {

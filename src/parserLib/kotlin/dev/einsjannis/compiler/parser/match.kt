@@ -1,5 +1,6 @@
 package dev.einsjannis.compiler.parser
 
+import dev.einsjannis.compiler.lexer.Token
 import dev.einsjannis.compiler.lexer.TokenType
 import kotlin.reflect.KClass
 
@@ -25,7 +26,7 @@ data class NoMatch(val cause: Cause) : Match<Nothing>() {
 
         data class NoTokensLeft(val expected: TokenType) : Cause()
 
-        data class TokenMissMatch(val expected: TokenType) : Cause()
+        data class TokenMissMatch(val expected: TokenType, val found: Token) : Cause()
 
         data class PatternMissMatch(val expected: Pattern<*>, val cause: Cause) : Cause() {
 

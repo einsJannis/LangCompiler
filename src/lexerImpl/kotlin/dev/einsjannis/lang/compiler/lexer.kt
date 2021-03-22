@@ -3,6 +3,7 @@ package dev.einsjannis.lang.compiler
 import dev.einsjannis.compiler.lexer.Lexer
 import dev.einsjannis.compiler.lexer.ignored
 import dev.einsjannis.compiler.lexer.token
+import dev.einsjannis.compiler.lexer.tokens
 import java.io.File
 
 object Token {
@@ -21,7 +22,7 @@ object Token {
             val BracesL by token(Regex.fromLiteral("("))
             val BracesR by token(Regex.fromLiteral(")"))
         }
-        object Operator {
+        /*object Operator {
             val Plus by token(Regex.fromLiteral("+"))
             val Minus by token(Regex.fromLiteral("-"))
             val And by token(Regex.fromLiteral("&"))
@@ -32,17 +33,14 @@ object Token {
             val LessThen by token(Regex.fromLiteral("<"))
             val GreaterThenOrEqual by token(Regex.fromLiteral(">="))
             val GreaterThen by token(Regex.fromLiteral(">"))
-            val Assign by token(Regex.fromLiteral("="))
-            val ReturnType by token(Regex.fromLiteral(":"))
-        }
+        }*/
+        val Assign by token(Regex.fromLiteral("="))
         val Colon by token(Regex.fromLiteral(","))
         val SemiColon by token(Regex.fromLiteral(";"))
+        val ReturnType by token(Regex.fromLiteral(":"))
     }
     object Primitive {
-        object Number {
-            val NaturalNumber by token(Regex("[0-9]+|0x[0-9a-fA-F]+|0b[01]+"))
-            val RationalNumber by token(Regex("[0-9]*.[0-9]+"))
-        }
+        val Number by token(Regex("[0-9]+|0x[0-9a-fA-F]+|0b[01]+"))
         val String by token(Regex("\".*\""))
         val Char by token(Regex("\'.\'"))
         val Boolean by token(Regex("true|false"))
@@ -62,27 +60,16 @@ private val lexer = Lexer(listOf(
     Token.Identifier,
     Token.Symbol.Colon,
     Token.Symbol.SemiColon,
+    Token.Symbol.Assign,
+    Token.Symbol.ReturnType,
     Token.Symbol.Brackets.ParenthesesL,
     Token.Symbol.Brackets.ParenthesesR,
     Token.Symbol.Brackets.BracesL,
     Token.Symbol.Brackets.BracesR,
-    Token.Symbol.Operator.Plus,
-    Token.Symbol.Operator.Minus,
-    Token.Symbol.Operator.And,
-    Token.Symbol.Operator.Or,
-    Token.Symbol.Operator.Not,
-    Token.Symbol.Operator.Equals,
-    Token.Symbol.Operator.GreaterThen,
-    Token.Symbol.Operator.GreaterThenOrEqual,
-    Token.Symbol.Operator.LessThen,
-    Token.Symbol.Operator.LessThenOrEqual,
-    Token.Symbol.Operator.Assign,
-    Token.Symbol.Operator.ReturnType,
     Token.Primitive.Boolean,
     Token.Primitive.Char,
     Token.Primitive.String,
-    Token.Primitive.Number.NaturalNumber,
-    Token.Primitive.Number.RationalNumber,
+    Token.Primitive.Number
 ))
 
 fun lex(file: File) = lexer.lex(file)

@@ -1,5 +1,9 @@
-var c = 5
+var c: Int = 5;
 
 fun f(a: Int): Int {
-    return a + c
-}
+    return add(a, c);
+};
+
+fun main(): Unit {
+    printf("%i", f(5));
+};
