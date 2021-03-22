@@ -1,10 +1,12 @@
+@file:Suppress("UNUSED")
+
 package dev.einsjannis
 
-import java.util.Stack
+import java.util.*
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
-class AdvancedIterator<T>(val list: List<T>): ListIterator<T> {
+class AdvancedIterator<T>(val list: List<T>) : ListIterator<T> {
 
     private var index: Int = 0
 
@@ -24,16 +26,16 @@ class AdvancedIterator<T>(val list: List<T>): ListIterator<T> {
 
     fun peek(): T = list[index]
 
-    fun pushContext(): Unit {
+    fun pushContext() {
         stack.push(index)
     }
 
-    fun popContext(): Unit {
+    fun popContext() {
         index = stack.pop()
     }
 
-    fun clearContext(): Unit {
-        val poped = stack.pop()
+    fun clearContext() {
+        stack.pop()
     }
 
     fun <T> inContext(block: () -> T): T {

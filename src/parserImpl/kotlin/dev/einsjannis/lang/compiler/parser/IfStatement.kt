@@ -14,7 +14,14 @@ data class IfStatement(
     override var parent: Node? = null
 
     companion object : Pattern<IfStatement> by sequence6(
-        tupleOf(Token.Keyword.If.pattern, Token.Symbol.Brackets.BracesL.pattern, Expression, Token.Symbol.Brackets.BracesR.pattern, CodeScope, optional(BaseElseStatement)),
+        tupleOf(
+            Token.Keyword.If.pattern,
+            Token.Symbol.Brackets.BracesL.pattern,
+            Expression,
+            Token.Symbol.Brackets.BracesR.pattern,
+            CodeScope,
+            optional(BaseElseStatement)
+        ),
         { (_, _, condition, _, code, elseStatement) -> IfStatement(condition, code, elseStatement) }
     )
 

@@ -8,7 +8,7 @@ import dev.einsjannis.compiler.parser.sequence2
 import dev.einsjannis.lang.compiler.Token
 import dev.einsjannis.tupleOf
 
-data class ReturnType(val identifier: Identifier): Node, Tuple1<Node?, Identifier> {
+data class ReturnType(val identifier: Identifier) : Node, Tuple1<Node?, Identifier> {
 
     override var parent: Node? = null
 

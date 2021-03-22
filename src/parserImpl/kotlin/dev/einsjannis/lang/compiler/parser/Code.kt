@@ -6,6 +6,7 @@ import dev.einsjannis.compiler.parser.superPattern
 
 interface Code : Node {
 
-    companion object : Pattern<Code> by superPattern(listOf(Expression, Assignment, VariableDefinition, ReturnStatement))
+    companion object :
+        Pattern<Code> by superPattern(listOf(Expression, Assignment, VariableDefinition, ReturnStatement))
 
 }

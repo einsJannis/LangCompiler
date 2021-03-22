@@ -11,7 +11,10 @@ class CodeScope(val list: List<Code>) : ScopeNode, List<Node?> by list {
     companion object : Pattern<CodeScope> by scopePattern(
         elementPattern = { Code },
         separatorPattern = Token.Symbol.SemiColon.pattern,
-        limiterPatterns = tupleOf(Token.Symbol.Brackets.ParenthesesL.pattern, Token.Symbol.Brackets.ParenthesesR.pattern),
+        limiterPatterns = tupleOf(
+            Token.Symbol.Brackets.ParenthesesL.pattern,
+            Token.Symbol.Brackets.ParenthesesR.pattern
+        ),
         constructor = ::CodeScope,
         requireTrailing = true
     )

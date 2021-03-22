@@ -3,7 +3,6 @@ package dev.einsjannis.lang.compiler
 import dev.einsjannis.compiler.lexer.Lexer
 import dev.einsjannis.compiler.lexer.ignored
 import dev.einsjannis.compiler.lexer.token
-import dev.einsjannis.compiler.lexer.tokens
 import java.io.File
 
 object Token {
@@ -15,6 +14,7 @@ object Token {
         val While by token(Regex.fromLiteral("while"))
         val Return by token(Regex.fromLiteral("return"))
     }
+
     object Symbol {
         object Brackets {
             val ParenthesesL by token(Regex.fromLiteral("{"))
@@ -22,6 +22,7 @@ object Token {
             val BracesL by token(Regex.fromLiteral("("))
             val BracesR by token(Regex.fromLiteral(")"))
         }
+
         /*object Operator {
             val Plus by token(Regex.fromLiteral("+"))
             val Minus by token(Regex.fromLiteral("-"))
@@ -39,37 +40,41 @@ object Token {
         val SemiColon by token(Regex.fromLiteral(";"))
         val ReturnType by token(Regex.fromLiteral(":"))
     }
+
     object Primitive {
         val Number by token(Regex("[0-9]+|0x[0-9a-fA-F]+|0b[01]+"))
         val String by token(Regex("\".*\""))
         val Char by token(Regex("\'.\'"))
         val Boolean by token(Regex("true|false"))
     }
+
     val Identifier by token(Regex("[A-Za-z_][A-Za-z_0-9]*|`.*`"))
     val WhiteSpace by ignored(Regex("\\s+"))
 }
 
-private val lexer = Lexer(listOf(
-    Token.WhiteSpace,
-    Token.Keyword.Function,
-    Token.Keyword.Variable,
-    Token.Keyword.If,
-    Token.Keyword.Else,
-    Token.Keyword.While,
-    Token.Keyword.Return,
-    Token.Identifier,
-    Token.Symbol.Colon,
-    Token.Symbol.SemiColon,
-    Token.Symbol.Assign,
-    Token.Symbol.ReturnType,
-    Token.Symbol.Brackets.ParenthesesL,
-    Token.Symbol.Brackets.ParenthesesR,
-    Token.Symbol.Brackets.BracesL,
-    Token.Symbol.Brackets.BracesR,
-    Token.Primitive.Boolean,
-    Token.Primitive.Char,
-    Token.Primitive.String,
-    Token.Primitive.Number
-))
+private val lexer = Lexer(
+    listOf(
+        Token.WhiteSpace,
+        Token.Keyword.Function,
+        Token.Keyword.Variable,
+        Token.Keyword.If,
+        Token.Keyword.Else,
+        Token.Keyword.While,
+        Token.Keyword.Return,
+        Token.Identifier,
+        Token.Symbol.Colon,
+        Token.Symbol.SemiColon,
+        Token.Symbol.Assign,
+        Token.Symbol.ReturnType,
+        Token.Symbol.Brackets.ParenthesesL,
+        Token.Symbol.Brackets.ParenthesesR,
+        Token.Symbol.Brackets.BracesL,
+        Token.Symbol.Brackets.BracesR,
+        Token.Primitive.Boolean,
+        Token.Primitive.Char,
+        Token.Primitive.String,
+        Token.Primitive.Number
+    )
+)
 
 fun lex(file: File) = lexer.lex(file)

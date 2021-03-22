@@ -1,3 +1,4 @@
+@file:Suppress("UNUSED")
 package dev.einsjannis.compiler.parser
 
 import dev.einsjannis.*

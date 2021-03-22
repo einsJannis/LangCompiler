@@ -1,7 +1,9 @@
 package dev.einsjannis.compiler.parser
 
-fun Node?.printTree(indent: String = ""): Unit {
-    if (this == null) { println("${indent}null"); return }
+fun Node?.printTree(indent: String = "") {
+    if (this == null) {
+        println("${indent}null"); return
+    }
     println(indent + this::class.simpleName)
     forEach { it.printTree("$indent  ") }
 }
@@ -16,10 +18,10 @@ fun NoMatch.Cause.printTree(indent: String = ""): Unit = when (this) {
     is NoMatch.Cause.NoTokensLeft -> println("${indent}expected: ${this.expected.name}; no tokens left")
 }
 
-val Pattern<*>.name get() = if (this is TokenPattern) {
-    this.tokenType.name
-} else {
-    this::class.qualifiedName?.let { it.substring(0, it.lastIndexOf('.')) }
-        ?.let { it.substring(it.lastIndexOf('.') + 1) }
-}
-
+val Pattern<*>.name
+    get() = if (this is TokenPattern) {
+        this.tokenType.name
+    } else {
+        this::class.qualifiedName?.let { it.substring(0, it.lastIndexOf('.')) }
+            ?.let { it.substring(it.lastIndexOf('.') + 1) }
+    }

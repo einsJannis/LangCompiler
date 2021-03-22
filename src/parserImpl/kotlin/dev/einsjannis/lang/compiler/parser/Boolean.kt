@@ -3,7 +3,6 @@ package dev.einsjannis.lang.compiler.parser
 import dev.einsjannis.compiler.parser.*
 import dev.einsjannis.lang.compiler.Token
 import dev.einsjannis.tupleOf
-import dev.einsjannis.castTo
 
 data class Boolean(override val token: TokenNode) : Primitive {
 

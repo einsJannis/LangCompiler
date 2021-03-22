@@ -1,5 +1,6 @@
 package dev.einsjannis.gradle.kotlin.compiler.parser
 
+import dev.einsjannis.gradle.kotlin.template
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
@@ -8,7 +9,6 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.InputChanges
 import java.io.File
-import dev.einsjannis.gradle.kotlin.template
 
 abstract class SequencePatternGeneratorTask : DefaultTask() {
 
@@ -29,6 +29,7 @@ abstract class SequencePatternGeneratorTask : DefaultTask() {
 
     //language=kotlin
     private fun generate(): String = """
+        @file:Suppress("UNUSED")
         package dev.einsjannis.compiler.parser
 
         import dev.einsjannis.*
@@ -41,7 +42,11 @@ abstract class SequencePatternGeneratorTask : DefaultTask() {
 
     //language=kotlin
     private fun generateSequencePattern(index: Int) = """
-        fun <${generateGenericsDef(index)}> sequence$index(patterns: Tuple$index<${generateGenericsPattern(index)}>, constructor: (Tuple$index<${generateGenerics(index)}>) -> N) = object : Pattern<N> {
+        fun <${generateGenericsDef(index)}> sequence$index(patterns: Tuple$index<${generateGenericsPattern(index)}>, constructor: (Tuple$index<${
+        generateGenerics(
+            index
+        )
+    }>) -> N) = object : Pattern<N> {
 
             @Suppress("UNCHECKED_CAST")
             override fun match(tokens: AdvancedIterator<Token>): Match<N> {

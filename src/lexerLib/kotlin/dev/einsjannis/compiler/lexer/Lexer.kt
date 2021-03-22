@@ -25,7 +25,7 @@ class Lexer(private val tokens: List<TokenType>) {
     }
 
     private fun isMatchValid(match: MatchResult?, atIndex: Int): Boolean {
-        contract { returns(true) implies(match != null) }
+        contract { returns(true) implies (match != null) }
         return match != null && match.range.first == atIndex
     }
 

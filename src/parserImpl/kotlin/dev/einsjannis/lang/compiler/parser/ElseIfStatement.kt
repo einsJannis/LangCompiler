@@ -14,7 +14,15 @@ data class ElseIfStatement(
     override var parent: Node? = null
 
     companion object : Pattern<ElseIfStatement> by sequence7(
-        tupleOf(Token.Keyword.Else.pattern, Token.Keyword.If.pattern, Token.Symbol.Brackets.BracesL.pattern, Expression, Token.Symbol.Brackets.BracesR.pattern, CodeScope, optional(BaseElseStatement)),
+        tupleOf(
+            Token.Keyword.Else.pattern,
+            Token.Keyword.If.pattern,
+            Token.Symbol.Brackets.BracesL.pattern,
+            Expression,
+            Token.Symbol.Brackets.BracesR.pattern,
+            CodeScope,
+            optional(BaseElseStatement)
+        ),
         { (_, _, _, expression, _, codeScope, elseStatement) -> ElseIfStatement(expression, codeScope, elseStatement) }
     )
 

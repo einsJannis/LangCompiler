@@ -1,7 +1,10 @@
 package dev.einsjannis.lang.compiler.parser
 
 import dev.einsjannis.Tuple2
-import dev.einsjannis.compiler.parser.*
+import dev.einsjannis.compiler.parser.Node
+import dev.einsjannis.compiler.parser.Pattern
+import dev.einsjannis.compiler.parser.pattern
+import dev.einsjannis.compiler.parser.sequence3
 import dev.einsjannis.lang.compiler.Token
 import dev.einsjannis.tupleOf
 

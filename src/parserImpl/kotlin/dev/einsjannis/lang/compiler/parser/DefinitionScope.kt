@@ -22,7 +22,12 @@ class DefinitionScope(val list: List<Definition>) : ScopeNode, List<Node?> by li
                     val separatorMatch = tokens.match(Token.Symbol.SemiColon.pattern)
                     if (separatorMatch is NoMatch) {
                         tokens.popContext()
-                        return NoMatch(NoMatch.Cause.PatternMissMatch(Token.Symbol.SemiColon.pattern, separatorMatch.cause))
+                        return NoMatch(
+                            NoMatch.Cause.PatternMissMatch(
+                                Token.Symbol.SemiColon.pattern,
+                                separatorMatch.cause
+                            )
+                        )
                     }
                     add(elementMatch.node)
                     if (!tokens.hasNext()) break

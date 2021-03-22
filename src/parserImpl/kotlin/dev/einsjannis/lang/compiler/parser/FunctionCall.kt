@@ -1,8 +1,8 @@
 package dev.einsjannis.lang.compiler.parser
 
-import dev.einsjannis.compiler.parser.Node
 import dev.einsjannis.Tuple2
 import dev.einsjannis.castTo
+import dev.einsjannis.compiler.parser.Node
 import dev.einsjannis.compiler.parser.Pattern
 import dev.einsjannis.compiler.parser.sequence2
 import dev.einsjannis.tupleOf

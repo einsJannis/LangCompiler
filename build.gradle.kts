@@ -1,3 +1,5 @@
+@file:Suppress("Annotator", "Annotator")
+
 import dev.einsjannis.gradle.kotlin.dependsOn
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -33,6 +35,7 @@ sourceSets {
         dependsOn(lexerImpl)
         dependsOn(parserLib)
     }
+    @kotlin.Suppress("UNUSED")
     val main by getting {
         dependsOn(privateLib)
         dependsOn(lexerLib)
@@ -40,6 +43,7 @@ sourceSets {
         dependsOn(parserLib)
         dependsOn(parserImpl)
     }
+    @kotlin.Suppress("UNUSED")
     val test by getting {
         dependsOn(privateLib)
         dependsOn(lexerLib)
@@ -55,6 +59,10 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test-junit"))
+}
+
+kotlin {
+    explicitApi()
 }
 
 tasks {
@@ -84,5 +92,5 @@ tasks {
 }
 
 fun org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions.optIn(annotation: String) {
-    freeCompilerArgs += "-Xopt-in=$annotation"
+    freeCompilerArgs = freeCompilerArgs + "-Xopt-in=$annotation"
 }

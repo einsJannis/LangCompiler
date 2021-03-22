@@ -1,3 +1,4 @@
+@file:Suppress("UNUSED")
 package dev.einsjannis.compiler.lexer
 
 import java.io.File
@@ -61,7 +62,8 @@ fun token(regex: Regex): TokenTypeDelegate = TokenTypeDelegate(regex, ::token)
 
 fun ignored(regex: Regex): TokenTypeDelegate = TokenTypeDelegate(regex, ::ignored)
 
-class TokenTypeDelegate(private val regex: Regex, val createToken: (name: String, regex: Regex) -> TokenType) : ReadOnlyProperty<Any?, TokenType> {
+class TokenTypeDelegate(private val regex: Regex, val createToken: (name: String, regex: Regex) -> TokenType) :
+    ReadOnlyProperty<Any?, TokenType> {
 
     private var _values: MutableMap<String, TokenType> = mutableMapOf()
 

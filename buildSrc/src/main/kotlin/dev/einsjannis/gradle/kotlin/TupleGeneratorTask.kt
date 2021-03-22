@@ -27,6 +27,7 @@ abstract class TupleGeneratorTask : DefaultTask() {
     }
 
     private fun generate(): String = """
+        @file:Suppress("UNUSED")
         package dev.einsjannis
         ${generateBaseTuple()}${generateTuples()}
         ${generateTupleOfFuns()}
@@ -43,9 +44,10 @@ abstract class TupleGeneratorTask : DefaultTask() {
         }
     """
 
-    private fun generatePlusFunMappings(): String = (amountOfTuples.get() - 1).downTo(0).joinToString("\n            ") {
-        generatePlusFunMapping(it)
-    }
+    private fun generatePlusFunMappings(): String =
+        (amountOfTuples.get() - 1).downTo(0).joinToString("\n            ") {
+            generatePlusFunMapping(it)
+        }
 
     private fun generatePlusFunMapping(index: Int) = "is Tuple$index<B, ${generateStars(index)}> -> this.plus(value)"
 
@@ -55,16 +57,25 @@ abstract class TupleGeneratorTask : DefaultTask() {
 
     //language=kotlin
     private fun generateCastFun(index: Int): String = """
-        fun <${generateGenericsDef(index)}, T> Tuple$index<${generateGenerics(index)}>.castTo(constructor: (${generateGenerics(index, false)}) -> T): T = constructor(${generateValues(index)})
+        fun <${generateGenericsDef(index)}, T> Tuple$index<${generateGenerics(index)}>.castTo(constructor: (${
+        generateGenerics(
+            index,
+            false
+        )
+    }) -> T): T = constructor(${generateValues(index)})
     """
 
     private fun generatePlusFuns(): String = template(amountOfTuples.get() - 1) { generatePlusFun(it) }
 
-    fun generateGenericsDefWithBase(index: Int) = generateGenericsDef(index, " : BASE")
+    private fun generateGenericsDefWithBase(index: Int) = generateGenericsDef(index, " : BASE")
 
     //language=kotlin
     private fun generatePlusFun(index: Int): String = """
-        operator fun <${generateGenericsDefWithBase(index)}, T : BASE, BASE> ${generateSuperTupleName(index)}.plus(value: T) = tupleOf(${generateValues(index).let { if (it == "") it else "${it}, " }}value)
+        operator fun <${generateGenericsDefWithBase(index)}, T : BASE, BASE> ${generateSuperTupleName(index)}.plus(value: T) = tupleOf(${
+        generateValues(
+            index
+        ).let { if (it == "") it else "${it}, " }
+    }value)
     """
 
     //language=kotlin
@@ -83,7 +94,8 @@ abstract class TupleGeneratorTask : DefaultTask() {
 
     private fun generateTupleName(index: Int): String = "Tuple$index<${generateGenericsDef(index)}>"
 
-    private fun generateSuperTupleName(index: Int): String = if (index < 0) "Tuple<B>" else "Tuple$index<${generateGenerics(index)}>"
+    private fun generateSuperTupleName(index: Int): String =
+        if (index < 0) "Tuple<B>" else "Tuple$index<${generateGenerics(index)}>"
 
     //language=kotlin
     private fun generateIteratorFun(index: Int): String = """
@@ -107,7 +119,11 @@ abstract class TupleGeneratorTask : DefaultTask() {
 
     //language=kotlin
     private fun generateTupleOfFun(index: Int): String = """
-        fun <${generateGenericsDef(index)}> tupleOf(${generateArgsDef(index)}): ${generateSuperTupleName(index)} = object : ${generateSuperTupleName(index)} {
+        fun <${generateGenericsDef(index)}> tupleOf(${generateArgsDef(index)}): ${generateSuperTupleName(index)} = object : ${
+        generateSuperTupleName(
+            index
+        )
+    } {
             ${generateValuesImpl(index)}
         }
     """
@@ -119,9 +135,10 @@ abstract class TupleGeneratorTask : DefaultTask() {
             override operator fun ${generateValueName(index)}: T$index = v$index
     """
 
-    private fun generateGenerics(index: Int, includeBase: Boolean = true): String = template(index, ", ") { "T$it" }.let {
-        if (!includeBase) it else if (index == 0) "B" else "B, $it"
-    }
+    private fun generateGenerics(index: Int, includeBase: Boolean = true): String =
+        template(index, ", ") { "T$it" }.let {
+            if (!includeBase) it else if (index == 0) "B" else "B, $it"
+        }
 
     private fun generateArgsDef(index: Int): String = template(index, ", ") { "v$it: T$it" }
 

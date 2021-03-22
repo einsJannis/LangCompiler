@@ -1,10 +1,12 @@
 package dev.einsjannis.lang.compiler.parser
 
 import dev.einsjannis.Tuple3
-import dev.einsjannis.tupleOf
-import dev.einsjannis.castTo
-import dev.einsjannis.compiler.parser.*
+import dev.einsjannis.compiler.parser.Node
+import dev.einsjannis.compiler.parser.Pattern
+import dev.einsjannis.compiler.parser.pattern
+import dev.einsjannis.compiler.parser.sequence5
 import dev.einsjannis.lang.compiler.Token
+import dev.einsjannis.tupleOf
 
 data class VariableDefinition(
     override val identifier: Identifier,

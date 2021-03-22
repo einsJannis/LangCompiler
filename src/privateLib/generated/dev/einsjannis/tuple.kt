@@ -1,3 +1,4 @@
+@file:Suppress("UNUSED")
 package dev.einsjannis
 
 interface Tuple<B> : Iterable<B>
