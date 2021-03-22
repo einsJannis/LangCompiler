@@ -13,12 +13,7 @@ interface Pattern<out T : Node?> {
 
 }
 
-fun <T : Node?> AdvancedIterator<Token>.match(pattern: Pattern<T>): Match<T> {
-    println("Matching for ${pattern.name} at ${this.peek().index}")
-    val match = pattern.match(this)
-    println("Result: ${match::class.simpleName}")
-    return match
-}
+fun <T : Node?> AdvancedIterator<Token>.match(pattern: Pattern<T>): Match<T> = pattern.match(this)
 
 class TokenPattern(val tokenType: TokenType) : Pattern<TokenNode> {
 

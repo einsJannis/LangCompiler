@@ -8,7 +8,7 @@ fun Node?.printTree(indent: String = ""): Unit {
 
 fun NoMatch.Cause.printTree(indent: String = ""): Unit = when (this) {
     is NoMatch.Cause.PatternMissMatch -> {
-        println("$indent${this.expected::class.qualifiedName?.let { it.substring(0, it.lastIndexOf('.')) }}")
+        println("$indent${this.expected.name}")
         this.cause.printTree("$indent  ")
     }
     is NoMatch.Cause.PatternMissMatches -> this.forEach { it.printTree(indent) }

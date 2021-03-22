@@ -26,17 +26,14 @@ class AdvancedIterator<T>(val list: List<T>): ListIterator<T> {
 
     fun pushContext(): Unit {
         stack.push(index)
-        println("Saved index: $index")
     }
 
     fun popContext(): Unit {
         index = stack.pop()
-        println("Reset to index: $index")
     }
 
     fun clearContext(): Unit {
         val poped = stack.pop()
-        println("Discarded saved index: $poped")
     }
 
     fun <T> inContext(block: () -> T): T {
