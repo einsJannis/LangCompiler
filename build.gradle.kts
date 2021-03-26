@@ -29,11 +29,20 @@ sourceSets {
     val lexerImpl by creating {
         dependsOn(lexerLib)
     }
+    val ir by creating
     val parserImpl by creating {
         dependsOn(privateLib)
         dependsOn(lexerLib)
         dependsOn(lexerImpl)
         dependsOn(parserLib)
+        dependsOn(ir)
+    }
+    val semanticAnalyser by creating {
+        dependsOn(privateLib)
+        dependsOn(lexerLib)
+        dependsOn(parserLib)
+        dependsOn(ir)
+        dependsOn(parserImpl)
     }
     @kotlin.Suppress("UNUSED")
     val main by getting {
@@ -41,7 +50,9 @@ sourceSets {
         dependsOn(lexerLib)
         dependsOn(lexerImpl)
         dependsOn(parserLib)
+        dependsOn(ir)
         dependsOn(parserImpl)
+        dependsOn(semanticAnalyser)
     }
     @kotlin.Suppress("UNUSED")
     val test by getting {
@@ -50,6 +61,7 @@ sourceSets {
         dependsOn(lexerImpl)
         dependsOn(parserLib)
         dependsOn(parserImpl)
+        dependsOn(semanticAnalyser)
     }
 }
 
@@ -62,7 +74,7 @@ dependencies {
 }
 
 kotlin {
-    explicitApi()
+    //explicitApi()
 }
 
 tasks {

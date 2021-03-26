@@ -7,6 +7,7 @@ import java.io.File
 
 object Token {
     object Keyword {
+        val Struct by token(Regex.fromLiteral("struct"))
         val Function by token(Regex.fromLiteral("fun"))
         val Variable by token(Regex.fromLiteral("var"))
         val If by token(Regex.fromLiteral("if"))
@@ -39,6 +40,8 @@ object Token {
         val Colon by token(Regex.fromLiteral(","))
         val SemiColon by token(Regex.fromLiteral(";"))
         val ReturnType by token(Regex.fromLiteral(":"))
+        val Dot by token(Regex.fromLiteral("."))
+        val Star by token(Regex.fromLiteral("*"))
     }
 
     object Primitive {
@@ -55,6 +58,7 @@ object Token {
 private val lexer = Lexer(
     listOf(
         Token.WhiteSpace,
+        Token.Keyword.Struct,
         Token.Keyword.Function,
         Token.Keyword.Variable,
         Token.Keyword.If,
@@ -66,6 +70,7 @@ private val lexer = Lexer(
         Token.Symbol.SemiColon,
         Token.Symbol.Assign,
         Token.Symbol.ReturnType,
+        Token.Symbol.Dot,
         Token.Symbol.Brackets.ParenthesesL,
         Token.Symbol.Brackets.ParenthesesR,
         Token.Symbol.Brackets.BracesL,

@@ -7,31 +7,31 @@ import dev.einsjannis.compiler.lexer.Token
 import dev.einsjannis.compiler.lexer.TokenType
 import dev.einsjannis.tupleOf
 
-interface Pattern<out T : Node?> {
+interface Pattern<out T> {
 
     fun match(tokens: AdvancedIterator<Token>): Match<T>
 
 }
 
-fun <T : Node?> AdvancedIterator<Token>.match(pattern: Pattern<T>): Match<T> = pattern.match(this)
+fun <T> AdvancedIterator<Token>.match(pattern: Pattern<T>): Match<T> = pattern.match(this)
 
-class TokenPattern(val tokenType: TokenType) : Pattern<TokenNode> {
+class TokenPattern(val tokenType: TokenType) : Pattern<Token> {
 
-    override fun match(tokens: AdvancedIterator<Token>): Match<TokenNode> {
+    override fun match(tokens: AdvancedIterator<Token>): Match<Token> {
         if (!tokens.hasNext()) return NoMatch(NoMatch.Cause.NoTokensLeft(tokenType))
         val token = tokens.next()
         if (token.type != tokenType) {
             tokens.previous()
             return NoMatch(NoMatch.Cause.TokenMissMatch(tokenType, token))
         }
-        return ValidMatch(TokenNode(token))
+        return ValidMatch(token)
     }
 
 }
 
-val TokenType.pattern: Pattern<TokenNode> get() = TokenPattern(this)
+val TokenType.pattern: Pattern<Token> get() = TokenPattern(this)
 
-class OptionalPattern<T : Node>(val pattern: Pattern<T>) : Pattern<T?> {
+class OptionalPattern<T>(val pattern: Pattern<T>) : Pattern<T?> {
 
     override fun match(tokens: AdvancedIterator<Token>): Match<T?> {
         val match = tokens.match(pattern)
@@ -45,9 +45,18 @@ class OptionalPattern<T : Node>(val pattern: Pattern<T>) : Pattern<T?> {
 
 }
 
-fun <T : Node> optional(pattern: Pattern<T>) = OptionalPattern(pattern)
+class LazyPattern<T>(val lazyPattern: () -> Pattern<T>) : Pattern<T> {
 
-fun <T : Node> superPattern(patterns: List<Pattern<T>>) = object : Pattern<T> {
+    override fun match(tokens: AdvancedIterator<Token>): Match<T> =
+        tokens.match(lazyPattern())
+
+}
+
+fun <T> lazyPatternMap(lazyPattern: () -> Pattern<T>) = LazyPattern(lazyPattern)
+
+fun <T> optional(pattern: Pattern<T>) = OptionalPattern(pattern)
+
+fun <T> superPattern(patterns: List<Pattern<T>>) = object : Pattern<T> {
 
     override fun match(tokens: AdvancedIterator<Token>): Match<T> {
         val failed = mutableListOf<Tuple2<Any, Pattern<T>, NoMatch.Cause>>()
@@ -64,8 +73,8 @@ fun <T : Node> superPattern(patterns: List<Pattern<T>>) = object : Pattern<T> {
 
 }
 
-fun <E : Node, S : Node, LS : Node?, LE : Node?, T : ScopeNode> scopePattern(
-    elementPattern: () -> Pattern<E>,
+fun <E : Any, S : Any, LS, LE, T> scopePattern(
+    elementPattern: Pattern<E>,
     separatorPattern: Pattern<S>,
     limiterPatterns: Tuple2<Pattern<*>, Pattern<LS>, Pattern<LE>>,
     constructor: (list: List<E>) -> T,
@@ -84,11 +93,11 @@ fun <E : Node, S : Node, LS : Node?, LE : Node?, T : ScopeNode> scopePattern(
         }
         val list = buildList {
             while (true) {
-                val elementMatch = tokens.match(elementPattern())
+                val elementMatch = tokens.match(elementPattern)
                 if (elementMatch is NoMatch) {
                     if (tokens.match(endPattern) is ValidMatch) break
                     tokens.popContext()
-                    return NoMatch(NoMatch.Cause.PatternMissMatch(elementPattern(), elementMatch.cause))
+                    return NoMatch(NoMatch.Cause.PatternMissMatch(elementPattern, elementMatch.cause))
                 }
                 val separatorMatch = tokens.match(separatorPattern)
                 if (separatorMatch is NoMatch) {

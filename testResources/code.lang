@@ -1,7 +1,7 @@
 var c: Int = 5;
 
 fun f(a: Int): Int {
-    return add(a, c);
+    return iAdd(a, c);
 };
 
 fun main(): Unit {

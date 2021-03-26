@@ -4,13 +4,13 @@ import dev.einsjannis.compiler.lexer.Token
 import dev.einsjannis.compiler.lexer.TokenType
 import kotlin.reflect.KClass
 
-sealed class Match<out T : Node?> {
+sealed class Match<out T : Any?> {
 
     abstract val node: T
 
 }
 
-data class ValidMatch<out T : Node?>(override val node: T) : Match<T>()
+data class ValidMatch<out T : Any?>(override val node: T) : Match<T>()
 
 data class NoMatch(val cause: Cause) : Match<Nothing>() {
 

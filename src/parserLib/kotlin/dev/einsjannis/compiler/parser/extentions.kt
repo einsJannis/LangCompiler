@@ -1,12 +1,12 @@
 package dev.einsjannis.compiler.parser
 
-fun Node?.printTree(indent: String = "") {
+/*fun Node?.printTree(indent: String = "") {
     if (this == null) {
         println("${indent}null"); return
     }
     println(indent + this::class.simpleName)
     forEach { it.printTree("$indent  ") }
-}
+}*/
 
 fun NoMatch.Cause.printTree(indent: String = ""): Unit = when (this) {
     is NoMatch.Cause.PatternMissMatch -> {
