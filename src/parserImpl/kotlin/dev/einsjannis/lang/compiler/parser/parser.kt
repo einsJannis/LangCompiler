@@ -28,8 +28,17 @@ import dev.einsjannis.lang.compiler.ir.Char as IRChar
 import dev.einsjannis.lang.compiler.ir.String as IRString
 import dev.einsjannis.lang.compiler.ir.Boolean as IRBoolean
 import dev.einsjannis.lang.compiler.ir.ConditionStatement as IRConditionStatement
+import dev.einsjannis.lang.compiler.ir.Cast as IRCast
 
 object Patterns {
+
+    object Cast : Pattern<IRCast> by sequence4(
+        tupleOf(Token.Symbol.Brackets.BracesL.pattern, sequence2(
+            tupleOf(Token.Identifier.pattern, optional(Token.Symbol.Star.pattern)),
+            { (identifier, star) -> ReturnTypeImpl(identifier, star != null) }
+        ), Token.Symbol.Brackets.BracesR.pattern, Expression),
+        { (_, returnType, _, expression) -> CastImpl(returnType, expression) }
+    )
 
     object ConditionStatement : Pattern<IRConditionStatement> by sequence5(
         tupleOf(Token.Keyword.If.pattern, Token.Symbol.Brackets.BracesL.pattern, Expression, Token.Symbol.Brackets.BracesR.pattern, CodeScope),
@@ -89,12 +98,12 @@ object Patterns {
         Expression,
         Token.Symbol.Colon.pattern,
         tupleOf(Token.Symbol.Brackets.BracesL.pattern, Token.Symbol.Brackets.BracesR.pattern),
-        ::ArgumentScopeImpl,
+        { ArgumentScopeImpl(it) },
         requireTrailing = true
     )
 
     object FunctionCall : Pattern<IRExpression> by sequence3(
-        tupleOf(Token.Identifier.pattern, ArgumentScope, InnerVariableCall),
+        tupleOf(Token.Identifier.pattern, lazyPatternMap { ArgumentScope }, InnerVariableCall),
         { (identifier, arguments, other) ->
             if (other == null)
                 FunctionCallImpl(identifier, arguments)
@@ -113,7 +122,7 @@ object Patterns {
         Code,
         Token.Symbol.SemiColon.pattern,
         tupleOf(Token.Symbol.Brackets.ParenthesesL.pattern, Token.Symbol.Brackets.ParenthesesR.pattern),
-        ::CodeScopeImpl,
+        { CodeScopeImpl(it) },
         requireTrailing = true
     )
 
@@ -126,7 +135,7 @@ object Patterns {
         ArgumentDefinition,
         Token.Symbol.Colon.pattern,
         tupleOf(Token.Symbol.Brackets.BracesL.pattern, Token.Symbol.Brackets.BracesR.pattern),
-        ::ArgumentDefinitionScopeImpl,
+        { ArgumentDefinitionScopeImpl(it) },
     )
 
     object ReturnType : Pattern<IRReturnType> by sequence3(
@@ -138,7 +147,7 @@ object Patterns {
         VariableDefinition,
         Token.Symbol.SemiColon.pattern,
         tupleOf(Token.Symbol.Brackets.ParenthesesL.pattern, Token.Symbol.Brackets.ParenthesesR.pattern),
-        ::StructVariableDefinitionScopeImpl,
+        { StructVariableDefinitionScopeImpl(it) },
         requireTrailing = true
     )
 

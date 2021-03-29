@@ -60,6 +60,7 @@ sourceSets {
         dependsOn(lexerLib)
         dependsOn(lexerImpl)
         dependsOn(parserLib)
+        dependsOn(ir)
         dependsOn(parserImpl)
         dependsOn(semanticAnalyser)
     }
