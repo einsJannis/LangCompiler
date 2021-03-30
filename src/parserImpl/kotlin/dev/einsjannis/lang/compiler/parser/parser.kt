@@ -19,7 +19,6 @@ import dev.einsjannis.lang.compiler.ir.CodeScope as IRCodeScope
 import dev.einsjannis.lang.compiler.ir.Code as IRCode
 import dev.einsjannis.lang.compiler.ir.Expression as IRExpression
 import dev.einsjannis.lang.compiler.ir.ReturnStatement as IRReturnStatement
-import dev.einsjannis.lang.compiler.ir.FunctionCall as IRFunctionCall
 import dev.einsjannis.lang.compiler.ir.ArgumentScope as IRArgumentScope
 import dev.einsjannis.lang.compiler.ir.AssignmentStatement as IRAssignmentStatement
 import dev.einsjannis.lang.compiler.ir.Primitive as IRPrimitive
@@ -71,7 +70,7 @@ object Patterns {
     )
 
     object Number : Pattern<IRNumber> by sequence1(
-        tupleOf(Token.Primitive.Number.pattern, Expression),
+        tupleOf(Token.Primitive.Number.pattern),
         { (token) -> NumberImpl(token) }
     )
 
@@ -96,10 +95,10 @@ object Patterns {
 
     object ArgumentScope : Pattern<IRArgumentScope> by scopePattern(
         Expression,
-        Token.Symbol.Colon.pattern,
+        Token.Symbol.Comma.pattern,
         tupleOf(Token.Symbol.Brackets.BracesL.pattern, Token.Symbol.Brackets.BracesR.pattern),
         { ArgumentScopeImpl(it) },
-        requireTrailing = true
+        requireTrailing = false
     )
 
     object FunctionCall : Pattern<IRExpression> by sequence3(
@@ -133,7 +132,7 @@ object Patterns {
 
     object ArgumentDefinitionScope : Pattern<IRArgumentDefinitionScope> by scopePattern(
         ArgumentDefinition,
-        Token.Symbol.Colon.pattern,
+        Token.Symbol.Comma.pattern,
         tupleOf(Token.Symbol.Brackets.BracesL.pattern, Token.Symbol.Brackets.BracesR.pattern),
         { ArgumentDefinitionScopeImpl(it) },
     )
@@ -196,7 +195,7 @@ object Patterns {
                     if (!tokens.hasNext()) break
                 }
             }
-            tokens.clearContext()
+            tokens.removeContext()
             return ValidMatch(DefinitionScopeImpl(list))
         }
 

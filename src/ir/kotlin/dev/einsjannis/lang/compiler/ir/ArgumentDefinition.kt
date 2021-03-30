@@ -1,3 +1,7 @@
 package dev.einsjannis.lang.compiler.ir
 
-interface ArgumentDefinition : VariableDefinition, Node
+interface ArgumentDefinition : VariableDefinition {
+
+    override val initialization: Expression? get() = null
+
+}

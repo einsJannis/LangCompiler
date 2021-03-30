@@ -14,8 +14,8 @@ private fun radixAndDigits(string: String) = when {
     else -> Pair(10, removeLines(string))
 }
 
-internal fun bytesFromToken(token: Token): ByteArray {
-    val (radix, string) = radixAndDigits(token.content)
+internal fun bytesFromString(string: String): ByteArray {
+    val (radix, string) = radixAndDigits(string)
     val bigInt = string.toBigInteger(radix)
     return bigInt.toByteArray()
 }

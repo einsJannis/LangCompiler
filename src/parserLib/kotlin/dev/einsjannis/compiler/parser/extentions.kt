@@ -22,6 +22,5 @@ val Pattern<*>.name
     get() = if (this is TokenPattern) {
         this.tokenType.name
     } else {
-        this::class.qualifiedName?.let { it.substring(0, it.lastIndexOf('.')) }
-            ?.let { it.substring(it.lastIndexOf('.') + 1) }
+        this::class.simpleName
     }

@@ -37,7 +37,7 @@ object Token {
             val GreaterThen by token(Regex.fromLiteral(">"))
         }*/
         val Assign by token(Regex.fromLiteral("="))
-        val Colon by token(Regex.fromLiteral(","))
+        val Comma by token(Regex.fromLiteral(","))
         val SemiColon by token(Regex.fromLiteral(";"))
         val ReturnType by token(Regex.fromLiteral(":"))
         val Dot by token(Regex.fromLiteral("."))
@@ -45,7 +45,7 @@ object Token {
     }
 
     object Primitive {
-        val Number by token(Regex("[0-9]+|0x[0-9a-fA-F]+|0b[01]+"))
+        val Number by token(Regex("([0-9]+|0x[0-9a-fA-F]+|0b[01]+)(b|i|L|B[0-9]+)?"))
         val String by token(Regex("\".*\""))
         val Char by token(Regex("\'.\'"))
         val Boolean by token(Regex("true|false"))
@@ -66,7 +66,7 @@ private val lexer = Lexer(
         Token.Keyword.While,
         Token.Keyword.Return,
         Token.Identifier,
-        Token.Symbol.Colon,
+        Token.Symbol.Comma,
         Token.Symbol.SemiColon,
         Token.Symbol.Assign,
         Token.Symbol.ReturnType,

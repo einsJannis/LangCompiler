@@ -19,7 +19,7 @@ fun <N : Any> sequence0(patterns: Tuple0<Pattern<*>>, constructor: (Tuple0<Any?>
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple0<Any?>))
     }
 
@@ -39,7 +39,7 @@ fun <N : Any, T0> sequence1(patterns: Tuple1<Pattern<*>, Pattern<T0>>, construct
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple1<Any?, T0>))
     }
 
@@ -59,7 +59,7 @@ fun <N : Any, T0, T1> sequence2(patterns: Tuple2<Pattern<*>, Pattern<T0>, Patter
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple2<Any?, T0, T1>))
     }
 
@@ -79,7 +79,7 @@ fun <N : Any, T0, T1, T2> sequence3(patterns: Tuple3<Pattern<*>, Pattern<T0>, Pa
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple3<Any?, T0, T1, T2>))
     }
 
@@ -99,7 +99,7 @@ fun <N : Any, T0, T1, T2, T3> sequence4(patterns: Tuple4<Pattern<*>, Pattern<T0>
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple4<Any?, T0, T1, T2, T3>))
     }
 
@@ -119,7 +119,7 @@ fun <N : Any, T0, T1, T2, T3, T4> sequence5(patterns: Tuple5<Pattern<*>, Pattern
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple5<Any?, T0, T1, T2, T3, T4>))
     }
 
@@ -139,7 +139,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5> sequence6(patterns: Tuple6<Pattern<*>, Pat
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple6<Any?, T0, T1, T2, T3, T4, T5>))
     }
 
@@ -159,7 +159,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6> sequence7(patterns: Tuple7<Pattern<*>,
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple7<Any?, T0, T1, T2, T3, T4, T5, T6>))
     }
 
@@ -179,7 +179,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6, T7> sequence8(patterns: Tuple8<Pattern
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple8<Any?, T0, T1, T2, T3, T4, T5, T6, T7>))
     }
 
@@ -199,7 +199,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6, T7, T8> sequence9(patterns: Tuple9<Pat
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple9<Any?, T0, T1, T2, T3, T4, T5, T6, T7, T8>))
     }
 
@@ -219,7 +219,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> sequence10(patterns: Tuple
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple10<Any?, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>))
     }
 
@@ -239,7 +239,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> sequence11(patterns: 
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple11<Any?, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>))
     }
 
@@ -259,7 +259,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> sequence12(patte
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple12<Any?, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>))
     }
 
@@ -279,7 +279,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> sequence13(
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple13<Any?, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>))
     }
 
@@ -299,7 +299,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> sequen
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple14<Any?, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>))
     }
 
@@ -319,7 +319,7 @@ fun <N : Any, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> s
             }
             tuple = tuple.plus(match.node)
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(tuple as Tuple15<Any?, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>))
     }
 

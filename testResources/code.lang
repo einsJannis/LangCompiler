@@ -4,6 +4,7 @@ fun f(a: Int): Int {
     return iAdd(a, c);
 };
 
-fun main(): Unit {
-    printf("%i", f(5));
+fun main(): Int {
+    print(iToString(f(5)));
+    return 0;
 };

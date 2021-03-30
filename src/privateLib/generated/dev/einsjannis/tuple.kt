@@ -9,7 +9,7 @@ interface Tuple0<B> : Tuple<B> {
 
 }
 
-interface Tuple1<B, T0 : B> : Tuple0<B> {
+interface Tuple1<B, T0 : B> : Tuple<B> {
     
     operator fun component1(): T0
 
@@ -17,112 +17,322 @@ interface Tuple1<B, T0 : B> : Tuple0<B> {
 
 }
 
-interface Tuple2<B, T0 : B, T1 : B> : Tuple1<B, T0> {
+interface Tuple2<B, T0 : B, T1 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
     operator fun component2(): T1
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2()).iterator()
 
 }
 
-interface Tuple3<B, T0 : B, T1 : B, T2 : B> : Tuple2<B, T0, T1> {
+interface Tuple3<B, T0 : B, T1 : B, T2 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
     operator fun component3(): T2
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3()).iterator()
 
 }
 
-interface Tuple4<B, T0 : B, T1 : B, T2 : B, T3 : B> : Tuple3<B, T0, T1, T2> {
+interface Tuple4<B, T0 : B, T1 : B, T2 : B, T3 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
     operator fun component4(): T3
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4()).iterator()
 
 }
 
-interface Tuple5<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B> : Tuple4<B, T0, T1, T2, T3> {
+interface Tuple5<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
     operator fun component5(): T4
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5()).iterator()
 
 }
 
-interface Tuple6<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B> : Tuple5<B, T0, T1, T2, T3, T4> {
+interface Tuple6<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
     operator fun component6(): T5
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6()).iterator()
 
 }
 
-interface Tuple7<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B> : Tuple6<B, T0, T1, T2, T3, T4, T5> {
+interface Tuple7<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
     operator fun component7(): T6
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7()).iterator()
 
 }
 
-interface Tuple8<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B> : Tuple7<B, T0, T1, T2, T3, T4, T5, T6> {
+interface Tuple8<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
+    operator fun component7(): T6
+
     operator fun component8(): T7
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8()).iterator()
 
 }
 
-interface Tuple9<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B> : Tuple8<B, T0, T1, T2, T3, T4, T5, T6, T7> {
+interface Tuple9<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
+    operator fun component7(): T6
+
+    operator fun component8(): T7
+
     operator fun component9(): T8
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9()).iterator()
 
 }
 
-interface Tuple10<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B> : Tuple9<B, T0, T1, T2, T3, T4, T5, T6, T7, T8> {
+interface Tuple10<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
+    operator fun component7(): T6
+
+    operator fun component8(): T7
+
+    operator fun component9(): T8
+
     operator fun component10(): T9
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10()).iterator()
 
 }
 
-interface Tuple11<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B> : Tuple10<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> {
+interface Tuple11<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
+    operator fun component7(): T6
+
+    operator fun component8(): T7
+
+    operator fun component9(): T8
+
+    operator fun component10(): T9
+
     operator fun component11(): T10
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11()).iterator()
 
 }
 
-interface Tuple12<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B> : Tuple11<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> {
+interface Tuple12<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
+    operator fun component7(): T6
+
+    operator fun component8(): T7
+
+    operator fun component9(): T8
+
+    operator fun component10(): T9
+
+    operator fun component11(): T10
+
     operator fun component12(): T11
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12()).iterator()
 
 }
 
-interface Tuple13<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B> : Tuple12<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> {
+interface Tuple13<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
+    operator fun component7(): T6
+
+    operator fun component8(): T7
+
+    operator fun component9(): T8
+
+    operator fun component10(): T9
+
+    operator fun component11(): T10
+
+    operator fun component12(): T11
+
     operator fun component13(): T12
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), component13()).iterator()
 
 }
 
-interface Tuple14<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B, T13 : B> : Tuple13<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> {
+interface Tuple14<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B, T13 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
+    operator fun component7(): T6
+
+    operator fun component8(): T7
+
+    operator fun component9(): T8
+
+    operator fun component10(): T9
+
+    operator fun component11(): T10
+
+    operator fun component12(): T11
+
+    operator fun component13(): T12
+
     operator fun component14(): T13
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), component13(), component14()).iterator()
 
 }
 
-interface Tuple15<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B, T13 : B, T14 : B> : Tuple14<B, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> {
+interface Tuple15<B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, T9 : B, T10 : B, T11 : B, T12 : B, T13 : B, T14 : B> : Tuple<B> {
     
+    operator fun component1(): T0
+
+    operator fun component2(): T1
+
+    operator fun component3(): T2
+
+    operator fun component4(): T3
+
+    operator fun component5(): T4
+
+    operator fun component6(): T5
+
+    operator fun component7(): T6
+
+    operator fun component8(): T7
+
+    operator fun component9(): T8
+
+    operator fun component10(): T9
+
+    operator fun component11(): T10
+
+    operator fun component12(): T11
+
+    operator fun component13(): T12
+
+    operator fun component14(): T13
+
     operator fun component15(): T14
 
     override fun iterator(): Iterator<B> = listOf<B>(component1(), component2(), component3(), component4(), component5(), component6(), component7(), component8(), component9(), component10(), component11(), component12(), component13(), component14(), component15()).iterator()
@@ -436,7 +646,6 @@ fun <B, T0 : B, T1 : B, T2 : B, T3 : B, T4 : B, T5 : B, T6 : B, T7 : B, T8 : B, 
 
 
 fun <B : BASE, T : BASE, BASE> Tuple<B>.plus(value: T): Tuple<BASE> = when (this) {
-    is Tuple15<B, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)
     is Tuple14<B, *, *, *, *, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)
     is Tuple13<B, *, *, *, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)
     is Tuple12<B, *, *, *, *, *, *, *, *, *, *, *, *> -> this.plus(value)

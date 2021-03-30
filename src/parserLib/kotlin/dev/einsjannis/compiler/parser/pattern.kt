@@ -13,7 +13,12 @@ interface Pattern<out T> {
 
 }
 
-fun <T> AdvancedIterator<Token>.match(pattern: Pattern<T>): Match<T> = pattern.match(this)
+fun <T> AdvancedIterator<Token>.match(pattern: Pattern<T>): Match<T> {
+    println("Matching for ${pattern.name}")
+    val match = pattern.match(this)
+    println("${pattern.name}: ${if (match is NoMatch) "NoMatch" else "Match"}")
+    return match
+}
 
 class TokenPattern(val tokenType: TokenType) : Pattern<Token> {
 
@@ -99,30 +104,26 @@ fun <E : Any, S : Any, LS, LE, T> scopePattern(
                     tokens.popContext()
                     return NoMatch(NoMatch.Cause.PatternMissMatch(elementPattern, elementMatch.cause))
                 }
-                val separatorMatch = tokens.match(separatorPattern)
-                if (separatorMatch is NoMatch) {
-                    if (!requireTrailing) {
-                        val endMatch = tokens.match(endPattern)
-                        if (endMatch is ValidMatch) {
-                            add(elementMatch.node)
-                            break
-                        }
-                    }
-                    tokens.popContext()
-                    return NoMatch(NoMatch.Cause.PatternMissMatch(separatorPattern, separatorMatch.cause))
-                }
                 add(elementMatch.node)
+                val separatorMatch = tokens.match(separatorPattern)
                 val endMatch = tokens.match(endPattern)
-                if (endMatch !is NoMatch) break
-                if (endMatch.causedBy<NoMatch.Cause.NoTokensLeft>()) return NoMatch(
-                    NoMatch.Cause.PatternMissMatch(
-                        endPattern,
-                        endMatch.cause
+                if (separatorMatch is NoMatch && requireTrailing) {
+                    tokens.popContext()
+                    return NoMatch(
+                        NoMatch.Cause.PatternMissMatch(
+                            separatorPattern,
+                            separatorMatch.cause
+                        )
                     )
-                )
+                }
+                if (endMatch !is NoMatch) break
+                if (separatorMatch is NoMatch) {
+                    tokens.popContext()
+                    return NoMatch(NoMatch.Cause.PatternMissMatch(endPattern, endMatch.cause))
+                }
             }
         }
-        tokens.clearContext()
+        tokens.removeContext()
         return ValidMatch(constructor(list))
     }
 
