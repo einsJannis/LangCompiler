@@ -2,7 +2,7 @@
 
 package dev.einsjannis
 
-import java.util.*
+import java.util.Stack
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 

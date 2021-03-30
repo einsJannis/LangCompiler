@@ -42,7 +42,11 @@ abstract class SequencePatternGeneratorTask : DefaultTask() {
 
     //language=kotlin
     private fun generateSequencePattern(index: Int) = """
-        fun <${generateGenericsDef(index)}> sequence$index(patterns: Tuple$index<${generateGenericsPattern(index)}>, constructor: (Tuple$index<${generateGenerics(index)}>) -> N) = object : Pattern<N> {
+        fun <${generateGenericsDef(index)}> sequence$index(patterns: Tuple$index<${generateGenericsPattern(index)}>, constructor: (Tuple$index<${
+        generateGenerics(
+            index
+        )
+    }>) -> N) = object : Pattern<N> {
 
             @Suppress("UNCHECKED_CAST")
             override fun match(tokens: AdvancedIterator<Token>): Match<N> {

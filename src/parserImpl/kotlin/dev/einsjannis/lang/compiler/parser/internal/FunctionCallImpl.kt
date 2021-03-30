@@ -6,7 +6,8 @@ import dev.einsjannis.lang.compiler.ir.FunctionCall
 import dev.einsjannis.lang.compiler.ir.FunctionDefinition
 import dev.einsjannis.lang.compiler.ir.ReturnType
 
-class FunctionCallImpl internal constructor(identifierToken: Token, override val arguments: ArgumentScope) : FunctionCall {
+class FunctionCallImpl internal constructor(identifierToken: Token, override val arguments: ArgumentScope) :
+    FunctionCall {
 
     val name: String = identifierValueOf(identifierToken)
 

@@ -3,8 +3,6 @@ package dev.einsjannis.lang.compiler.ir.builtin
 import dev.einsjannis.lang.compiler.ir.StructDefinition
 import dev.einsjannis.lang.compiler.ir.TypeDefinition
 import dev.einsjannis.lang.compiler.ir.internal.*
-import dev.einsjannis.lang.compiler.ir.internal.ReturnTypeImpl
-import dev.einsjannis.lang.compiler.ir.internal.TypeDefinitionImpl
 
 object Types {
 
@@ -18,9 +16,11 @@ object Types {
 
     object TypeMeta : StructDefinition by StructDefinitionImpl(
         "TypeMeta",
-        StructVariableDefinitionScopeImpl(listOf(
-            VariableDefinitionImpl("size", ReturnTypeImpl(Long, false), null)
-        ))
+        StructVariableDefinitionScopeImpl(
+            listOf(
+                VariableDefinitionImpl("size", ReturnTypeImpl(Long, false), null)
+            )
+        )
     )
 
     class Blob private constructor(size: Int) : TypeDefinition by TypeDefinitionImpl("Blob$size") {

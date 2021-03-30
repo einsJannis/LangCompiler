@@ -105,7 +105,7 @@ abstract class TupleGeneratorTask : DefaultTask() {
 
     private fun generateValueName(index: Int): String = "component${index + 1}()"
 
-    private fun generateValueDefs(index: Int): String = template(index+1) { generateValueDef(it) }
+    private fun generateValueDefs(index: Int): String = template(index + 1) { generateValueDef(it) }
 
     //language=kotlin
     private fun generateValueDef(index: Int): String = if (index < 0) "" else """

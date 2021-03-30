@@ -1,7 +1,10 @@
 package dev.einsjannis.lang.compiler.parser.internal
 
 import dev.einsjannis.compiler.lexer.Token
-import dev.einsjannis.lang.compiler.ir.*
+import dev.einsjannis.lang.compiler.ir.ArgumentDefinitionScope
+import dev.einsjannis.lang.compiler.ir.CodeScope
+import dev.einsjannis.lang.compiler.ir.FunctionImplementationDefinition
+import dev.einsjannis.lang.compiler.ir.ReturnType
 
 class FunctionImplementationDefinitionImpl(
     identifierToken: Token,

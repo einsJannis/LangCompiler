@@ -4,30 +4,29 @@ import dev.einsjannis.AdvancedIterator
 import dev.einsjannis.compiler.parser.*
 import dev.einsjannis.lang.compiler.Token
 import dev.einsjannis.lang.compiler.parser.internal.*
-import dev.einsjannis.lang.compiler.parser.internal.StructDefinitionImpl
 import dev.einsjannis.tupleOf
-import dev.einsjannis.lang.compiler.ir.DefinitionScope as IRDefinitionScope
-import dev.einsjannis.lang.compiler.ir.Definition as IRDefinition
-import dev.einsjannis.lang.compiler.ir.StructDefinition as IRStructDefinition
-import dev.einsjannis.lang.compiler.ir.VariableDefinition as IRVariableDefinition
-import dev.einsjannis.lang.compiler.ir.FunctionImplementationDefinition as IRFunctionImplDefinition
-import dev.einsjannis.lang.compiler.ir.StructVariableDefinitionScope as IRStructVariableDefinitionScope
-import dev.einsjannis.lang.compiler.ir.ReturnType as IRReturnType
-import dev.einsjannis.lang.compiler.ir.ArgumentDefinitionScope as IRArgumentDefinitionScope
 import dev.einsjannis.lang.compiler.ir.ArgumentDefinition as IRArgumentDefinition
-import dev.einsjannis.lang.compiler.ir.CodeScope as IRCodeScope
-import dev.einsjannis.lang.compiler.ir.Code as IRCode
-import dev.einsjannis.lang.compiler.ir.Expression as IRExpression
-import dev.einsjannis.lang.compiler.ir.ReturnStatement as IRReturnStatement
+import dev.einsjannis.lang.compiler.ir.ArgumentDefinitionScope as IRArgumentDefinitionScope
 import dev.einsjannis.lang.compiler.ir.ArgumentScope as IRArgumentScope
 import dev.einsjannis.lang.compiler.ir.AssignmentStatement as IRAssignmentStatement
-import dev.einsjannis.lang.compiler.ir.Primitive as IRPrimitive
-import dev.einsjannis.lang.compiler.ir.Number as IRNumber
-import dev.einsjannis.lang.compiler.ir.Char as IRChar
-import dev.einsjannis.lang.compiler.ir.String as IRString
 import dev.einsjannis.lang.compiler.ir.Boolean as IRBoolean
-import dev.einsjannis.lang.compiler.ir.ConditionStatement as IRConditionStatement
 import dev.einsjannis.lang.compiler.ir.Cast as IRCast
+import dev.einsjannis.lang.compiler.ir.Char as IRChar
+import dev.einsjannis.lang.compiler.ir.Code as IRCode
+import dev.einsjannis.lang.compiler.ir.CodeScope as IRCodeScope
+import dev.einsjannis.lang.compiler.ir.ConditionStatement as IRConditionStatement
+import dev.einsjannis.lang.compiler.ir.Definition as IRDefinition
+import dev.einsjannis.lang.compiler.ir.DefinitionScope as IRDefinitionScope
+import dev.einsjannis.lang.compiler.ir.Expression as IRExpression
+import dev.einsjannis.lang.compiler.ir.FunctionImplementationDefinition as IRFunctionImplDefinition
+import dev.einsjannis.lang.compiler.ir.Number as IRNumber
+import dev.einsjannis.lang.compiler.ir.Primitive as IRPrimitive
+import dev.einsjannis.lang.compiler.ir.ReturnStatement as IRReturnStatement
+import dev.einsjannis.lang.compiler.ir.ReturnType as IRReturnType
+import dev.einsjannis.lang.compiler.ir.String as IRString
+import dev.einsjannis.lang.compiler.ir.StructDefinition as IRStructDefinition
+import dev.einsjannis.lang.compiler.ir.StructVariableDefinitionScope as IRStructVariableDefinitionScope
+import dev.einsjannis.lang.compiler.ir.VariableDefinition as IRVariableDefinition
 
 object Patterns {
 
@@ -40,7 +39,13 @@ object Patterns {
     )
 
     object ConditionStatement : Pattern<IRConditionStatement> by sequence5(
-        tupleOf(Token.Keyword.If.pattern, Token.Symbol.Brackets.BracesL.pattern, Expression, Token.Symbol.Brackets.BracesR.pattern, CodeScope),
+        tupleOf(
+            Token.Keyword.If.pattern,
+            Token.Symbol.Brackets.BracesL.pattern,
+            Expression,
+            Token.Symbol.Brackets.BracesR.pattern,
+            CodeScope
+        ),
         { (_, _, condition, _, code) -> ConditionStatementImpl(condition, code) }
     )
 
@@ -115,7 +120,8 @@ object Patterns {
 
     object Expression : Pattern<IRExpression> by superPattern(listOf(FunctionCall, VariableCall, Primitive))
 
-    object Code : Pattern<IRCode> by superPattern(listOf(ReturnStatement, ConditionStatement, AssignmentStatement, Expression))
+    object Code :
+        Pattern<IRCode> by superPattern(listOf(ReturnStatement, ConditionStatement, AssignmentStatement, Expression))
 
     object CodeScope : Pattern<IRCodeScope> by scopePattern(
         Code,
@@ -151,8 +157,21 @@ object Patterns {
     )
 
     object FunctionImplDefinition : Pattern<IRFunctionImplDefinition> by sequence5(
-        tupleOf(Token.Keyword.Function.pattern, Token.Identifier.pattern, ArgumentDefinitionScope, ReturnType, CodeScope),
-        { (_, identifier, arguments, returnType, code) -> FunctionImplementationDefinitionImpl(identifier, arguments, returnType, code) }
+        tupleOf(
+            Token.Keyword.Function.pattern,
+            Token.Identifier.pattern,
+            ArgumentDefinitionScope,
+            ReturnType,
+            CodeScope
+        ),
+        { (_, identifier, arguments, returnType, code) ->
+            FunctionImplementationDefinitionImpl(
+                identifier,
+                arguments,
+                returnType,
+                code
+            )
+        }
     )
 
     object VariableDefinition : Pattern<IRVariableDefinition> by sequence4(
@@ -160,7 +179,13 @@ object Patterns {
             tupleOf(Token.Symbol.Assign.pattern, Expression),
             { (_, expression) -> expression }
         ))),
-        { (_, identifier, returnType, initialization) -> VariableDefinitionImpl(identifier, returnType, initialization) }
+        { (_, identifier, returnType, initialization) ->
+            VariableDefinitionImpl(
+                identifier,
+                returnType,
+                initialization
+            )
+        }
     )
 
     object StructDefinition : Pattern<IRStructDefinition> by sequence3(
@@ -168,7 +193,8 @@ object Patterns {
         { (_, identifier, structScope) -> StructDefinitionImpl(identifier, structScope) }
     )
 
-    object Definition : Pattern<IRDefinition> by superPattern(listOf(StructDefinition, VariableDefinition, FunctionImplDefinition))
+    object Definition :
+        Pattern<IRDefinition> by superPattern(listOf(StructDefinition, VariableDefinition, FunctionImplDefinition))
 
     object DefinitionScope : Pattern<IRDefinitionScope> {
 

@@ -1,7 +1,6 @@
 package dev.einsjannis.lang.compiler.ir.internal
 
 import dev.einsjannis.lang.compiler.ir.ArgumentDefinition
-import dev.einsjannis.lang.compiler.ir.Expression
 import dev.einsjannis.lang.compiler.ir.ReturnType
 
 internal data class ArgumentDefinitionImpl(

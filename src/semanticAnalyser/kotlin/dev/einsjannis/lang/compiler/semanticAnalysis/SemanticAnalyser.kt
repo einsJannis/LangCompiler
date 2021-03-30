@@ -6,6 +6,7 @@ import dev.einsjannis.lang.compiler.ir.builtin.Types
 import dev.einsjannis.lang.compiler.parser.internal.FunctionCallImpl
 import dev.einsjannis.lang.compiler.parser.internal.ReturnTypeImpl
 import dev.einsjannis.lang.compiler.parser.internal.VariableCallImpl
+import dev.einsjannis.lang.compiler.semanticAnalysis.exception.*
 
 object SemanticAnalyser {
 
@@ -15,11 +16,11 @@ object SemanticAnalyser {
         val globalFunctions: MutableList<FunctionDefinition> = Functions.all.toMutableList()
         for (definition in tree.children) {
             when (definition) {
-                is StructDefinition -> {
+                is StructDefinition                 -> {
                     analyseStruct(definition, globalStructs, globalVariables, globalFunctions)
                     globalStructs += definition
                 }
-                is VariableDefinition -> {
+                is VariableDefinition               -> {
                     analyseVariable(definition, globalStructs, globalVariables, globalFunctions)
                     globalVariables += definition
                 }
@@ -38,7 +39,7 @@ object SemanticAnalyser {
         scopeFunctions: List<FunctionDefinition>
     ) {
         val variables: MutableList<VariableDefinition> = mutableListOf()
-        analyseIdentifier(structDefinition.name, scopeStructs, scopeVariables, scopeFunctions)
+        analyseIdentifier(structDefinition, structDefinition.name, scopeStructs, scopeVariables, scopeFunctions)
         structDefinition.variableDefinitions.children.forEach {
             analyseStructVariable(it, scopeStructs, variables)
             variables += it
@@ -50,13 +51,14 @@ object SemanticAnalyser {
         globalStructs: List<TypeDefinition>,
         scopeVariables: List<VariableDefinition>
     ) {
-        analyseIdentifier(variable.name, scopeVariables)
+        analyseIdentifier(variable, variable.name, scopeVariables)
         analyseReturnType(variable.returnType, globalStructs)
     }
 
-    private fun analyseIdentifier(identifier: String, vararg definitions: List<Definition>) {
-        if (definitions.any { list -> list.any { it.name == identifier } })
-            throw TODO("Name already registered")
+    private fun analyseIdentifier(definition: Definition, identifier: String, vararg definitions: List<Definition>) {
+        val a = definitions.mapNotNull { list -> list.find { it.name == identifier } }.firstOrNull()
+        if (a != null)
+            throw NonUniqueIdentifierException(identifier, a, definition)
     }
 
     private fun analyseVariable(
@@ -65,17 +67,20 @@ object SemanticAnalyser {
         scopeVariables: List<VariableDefinition>,
         scopeFunctions: List<FunctionDefinition>
     ) {
-        analyseIdentifier(variableDefinition.name, scopeStructs, scopeVariables, scopeFunctions)
+        analyseIdentifier(variableDefinition, variableDefinition.name, scopeStructs, scopeVariables, scopeFunctions)
         analyseReturnType(variableDefinition.returnType, scopeStructs)
         variableDefinition.initialization?.let {
             analyseExpression(it, scopeStructs, scopeVariables, scopeFunctions)
-            checkType(variableDefinition.returnType, it.returnType)
+            checkType(variableDefinition.returnType, it.returnType) { a, b ->
+                TypeMissMatchInVariableDefinition(variableDefinition, a, b)
+            }
         }
     }
 
     private fun analyseReturnType(returnType: ReturnType, scopeStructs: List<TypeDefinition>) {
         if (returnType is ReturnTypeImpl)
-            returnType.typeDefinition = scopeStructs.find { it.name == returnType.name } ?: throw TODO("UnknownRef")
+            returnType.typeDefinition = scopeStructs.find { it.name == returnType.name }
+                ?: throw UnknownReferenceException(returnType.name)
     }
 
     private fun analyseFunction(
@@ -84,7 +89,7 @@ object SemanticAnalyser {
         scopeVariables: List<VariableDefinition>,
         scopeFunctions: List<FunctionDefinition>
     ) {
-        analyseIdentifier(functionDefinition.name, scopeStructs, scopeVariables, scopeFunctions)
+        analyseIdentifier(functionDefinition, functionDefinition.name, scopeStructs, scopeVariables, scopeFunctions)
         analyseReturnType(functionDefinition.returnType, scopeStructs)
         val mScopeVariables = scopeVariables.toMutableList()
         functionDefinition.arguments.children.forEach {
@@ -107,7 +112,7 @@ object SemanticAnalyser {
         scopeStructs: List<TypeDefinition>,
         scopeVariables: List<VariableDefinition>
     ) {
-        analyseIdentifier(argumentDefinition.name, scopeVariables)
+        analyseIdentifier(argumentDefinition, argumentDefinition.name, scopeVariables)
         analyseReturnType(argumentDefinition.returnType, scopeStructs)
     }
 
@@ -120,20 +125,20 @@ object SemanticAnalyser {
     ) {
         val mScopeVariables: MutableList<VariableDefinition> = scopeVariables.toMutableList()
         when (code) {
-            is Expression -> analyseExpression(code, scopeStructs, mScopeVariables, scopeFunctions)
-            is ConditionStatement -> analyseConditionStatement(
+            is Expression          -> analyseExpression(code, scopeStructs, mScopeVariables, scopeFunctions)
+            is ConditionStatement  -> analyseConditionStatement(
                 code,
                 scopeStructs,
                 mScopeVariables,
                 scopeFunctions,
                 enclosingFunction
             )
-            is VariableDefinition -> {
+            is VariableDefinition  -> {
                 analyseVariable(code, scopeStructs, mScopeVariables, scopeFunctions)
                 mScopeVariables.add(code)
             }
             is AssignmentStatement -> analyseAssignment(code, scopeStructs, mScopeVariables, scopeFunctions)
-            is ReturnStatement -> analyseReturnStatement(
+            is ReturnStatement     -> analyseReturnStatement(
                 code,
                 scopeStructs,
                 mScopeVariables,
@@ -164,7 +169,9 @@ object SemanticAnalyser {
         enclosingFunction: FunctionDefinition
     ) {
         analyseExpression(returnStatement.expression, scopeStructs, scopeVariables, scopeFunctions)
-        checkType(returnStatement.expression.returnType, enclosingFunction.returnType)
+        checkType(returnStatement.expression.returnType, enclosingFunction.returnType) { a, b ->
+            TypeMissMatchInReturnStatement(returnStatement, a, b)
+        }
     }
 
     private fun analyseAssignment(
@@ -175,7 +182,9 @@ object SemanticAnalyser {
     ) {
         analyseVariableCall(assignment.variableCall, scopeStructs, scopeVariables, scopeFunctions)
         analyseExpression(assignment.expression, scopeStructs, scopeVariables, scopeFunctions)
-        checkType(assignment.variableCall.returnType, assignment.expression.returnType)
+        checkType(assignment.variableCall.returnType, assignment.expression.returnType) { a, b ->
+            TypeMissMatchInAssignment(assignment, a, b)
+        }
     }
 
     private fun analyseExpression(
@@ -186,8 +195,8 @@ object SemanticAnalyser {
     ): Unit = when (expression) {
         is VariableCall -> analyseVariableCall(expression, scopeStructs, scopeVariables, scopeFunctions)
         is FunctionCall -> analyseFunctionCall(expression, scopeStructs, scopeVariables, scopeFunctions)
-        is Cast -> analyseCast(expression, scopeStructs, scopeVariables, scopeFunctions)
-        else -> Unit
+        is Cast         -> analyseCast(expression, scopeStructs, scopeVariables, scopeFunctions)
+        else            -> Unit
     }
 
     private fun analyseCast(
@@ -206,15 +215,17 @@ object SemanticAnalyser {
         scopeVariables: List<VariableDefinition>,
         scopeFunctions: List<FunctionDefinition>
     ) {
-        if (variableCall !is VariableCallImpl) throw TODO("huh?")
+        if (variableCall !is VariableCallImpl) return
         if (variableCall.parent != null) {
             analyseExpression(variableCall.parent!!, scopeStructs, scopeVariables, scopeFunctions)
             val type = variableCall.parent!!.returnType.typeDefinition
-            if (type !is StructDefinition) throw TODO("UnknownRef")
+            if (type !is StructDefinition) throw UnknownReferenceException(variableCall.name)
             variableCall.variableDefinition =
-                type.variableDefinitions.children.find { it.name == variableCall.name } ?: throw TODO()
+                type.variableDefinitions.children.find { it.name == variableCall.name }
+                    ?: throw UnknownReferenceException(variableCall.name)
         } else {
-            variableCall.variableDefinition = scopeVariables.find { it.name == variableCall.name } ?: throw TODO()
+            variableCall.variableDefinition = scopeVariables.find { it.name == variableCall.name }
+                ?: throw UnknownReferenceException(variableCall.name)
         }
     }
 
@@ -224,15 +235,28 @@ object SemanticAnalyser {
         scopeVariables: List<VariableDefinition>,
         scopeFunctions: List<FunctionDefinition>
     ) {
-        if (functionCall !is FunctionCallImpl) throw TODO("huh?")
-        functionCall.functionDefinition =
-            scopeFunctions.find { it.name == functionCall.name } ?: throw TODO("UnknownRef")
-        functionCall.arguments.children.forEach { analyseExpression(it, scopeStructs, scopeVariables, scopeFunctions) }
+        if (functionCall is FunctionCallImpl)
+            functionCall.functionDefinition =
+                scopeFunctions.find { it.name == functionCall.name }
+                    ?: throw UnknownReferenceException(functionCall.name)
+        functionCall.arguments.children.forEachIndexed { index, expression ->
+            analyseExpression(expression, scopeStructs, scopeVariables, scopeFunctions)
+            checkType(
+                functionCall.functionDefinition.arguments.children[index].returnType,
+                expression.returnType
+            ) { a, b ->
+                TypeMissMatchInFunctionArguments(functionCall, a, b)
+            }
+        }
     }
 
-    private fun checkType(typeA: ReturnType, typeB: ReturnType) {
-        if (typeA.isPointer != typeB.isPointer || typeA.typeDefinition.name != typeB.typeDefinition.name)
-            throw TODO("type miss match")
+    private fun checkType(
+        require: ReturnType,
+        found: ReturnType,
+        exceptionInit: (ReturnType, ReturnType) -> TypeMissMatch
+    ) {
+        if (require.isPointer != found.isPointer || require.typeDefinition.name != found.typeDefinition.name)
+            throw exceptionInit(require, found)
     }
 
 }

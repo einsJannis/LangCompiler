@@ -1,135 +1,229 @@
 package dev.einsjannis.lang.compiler.ir
 
-fun DefinitionScope.printInfo(indent: kotlin.String = "") {
-    println("${indent}Definitions {")
-    children.forEach { when (it) {
-        is StructDefinition -> it.printInfo("$indent  ")
-        is VariableDefinition -> it.printInfo("$indent  ")
-        is FunctionDefinition -> it.printInfo("$indent  ")
-    } }
-    println("$indent}")
-}
+fun DefinitionScope.printInfo() = println(info)
 
-fun StructDefinition.printInfo(indent: kotlin.String = "") {
-    println("${indent}Struct {")
-    println("${indent}  name = $name")
-    variableDefinitions.printInfo("$indent  ")
-}
+val DefinitionScope.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
 
-fun StructVariableDefinitionScope.printInfo(indent: kotlin.String = "") {
-    println("${indent}Variables {")
-    children.forEach { it.printInfo("$indent  ") }
-}
-
-fun VariableDefinition.printInfo(indent: kotlin.String = "") {
-    println("${indent}Variable {")
-    println("${indent}  name = $name")
-    returnType.printInfo("$indent  ")
-    initialization?.let {
-        println("${indent}  Initialization {")
-        it.printInfo("$indent    ")
-        println("}")
-    }
-}
-
-fun ReturnType.printInfo(indent: kotlin.String = "") {
-    println("${indent}ReturnType {")
-    println("${indent}  refName = ${typeDefinition.name}")
-    println("${indent}  isPointer = ${isPointer}")
-    println("${indent}}")
-}
-
-fun Expression.printInfo(indent: kotlin.String = ""): Unit = when (this) {
-    is FunctionCall -> {
-        println("${indent}FunctionCall {")
-        println("${indent}  refName = ${functionDefinition.name}")
-        arguments.printInfo("$indent  ")
-        returnType.printInfo("$indent  ")
-        println("${indent}}")
-    }
-    is VariableCall -> {
-        println("${indent}VariableCall {")
-        println("${indent}  refName = ${variableDefinition.name}")
-        parent?.let { it.printInfo("$indent  ") }
-        returnType.printInfo("$indent  ")
-        println("${indent}}")
-    }
-    is Number -> {
-        println("${indent}Number {")
-        println("${indent}  value = $bytes")
-        returnType.printInfo("$indent  ")
-        println("${indent}}")
-    }
-    is Char -> {
-        println("${indent}Char {")
-        println("${indent}  value = $value")
-        returnType.printInfo("$indent  ")
-        println("${indent}}")
-    }
-    is String -> {
-        println("${indent}String {")
-        println("${indent}  value = $value")
-        returnType.printInfo("$indent  ")
-        println("${indent}}")
-    }
-    is Boolean -> {
-        println("${indent}Boolean {")
-        println("${indent}  value = $value")
-        returnType.printInfo("$indent  ")
-        println("${indent}}")
-    }
-    is Cast -> {
-        println("${indent}Cast {")
-        returnType.printInfo("$indent  ")
-        expression.printInfo("$indent  ")
-    }
-    else -> TODO("huh?")
-}
-
-fun FunctionDefinition.printInfo(indent: kotlin.String = "") {
-    println("${indent}Function {")
-    println("${indent}  name = $name")
-    arguments.printInfo("$indent  ")
-    returnType.printInfo("$indent  ")
-    if (this is FunctionImplementationDefinition) {
-        code.printInfo("$indent  ")
-    }
-    println("}")
-}
-
-fun ArgumentDefinitionScope.printInfo(indent: kotlin.String) {
-    println("${indent}Arguments {")
-    children.forEach { it.printInfo("$indent  ") }
-    println("$indent}")
-}
-
-fun ArgumentScope.printInfo(indent: kotlin.String) {
-    println("${indent}Arguments {")
-    children.forEach { it.printInfo("$indent  ") }
-    println("${indent}}")
-}
-
-fun CodeScope.printInfo(indent: kotlin.String) {
-    println("${indent}Code {")
+fun DefinitionScope.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Definitions {")
     children.forEach {
         when (it) {
-            is Expression -> it.printInfo("$indent  ")
-            is AssignmentStatement -> it.printInfo("$indent  ")
-            is ReturnStatement -> it.printInfo("$indent  ")
+            is StructDefinition   -> it.info(stringBuilder, "$indent  ")
+            is VariableDefinition -> it.info(stringBuilder, "$indent  ")
+            is FunctionDefinition -> it.info(stringBuilder, "$indent  ")
         }
     }
-    println("${indent}}")
+    stringBuilder.appendLine("$indent}")
 }
 
-fun AssignmentStatement.printInfo(indent: kotlin.String) {
-    println("${indent}Assignment {")
-    variableCall.printInfo("$indent  ")
-    expression.printInfo("$indent  ")
-    println("$indent}")
+val StructDefinition.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun StructDefinition.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Struct {")
+    stringBuilder.appendLine("$indent  name = $name")
+    variableDefinitions.info(stringBuilder, "$indent  ")
+    stringBuilder.appendLine("$indent}")
 }
 
-fun ReturnStatement.printInfo(indent: kotlin.String) {
-    println("${indent}Return {")
-    expression.printInfo("$indent  ")
-    println("$indent}")
+val StructVariableDefinitionScope.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun StructVariableDefinitionScope.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Variables {")
+    children.forEach { it.info(stringBuilder, "$indent  ") }
+    stringBuilder.appendLine("$indent}")
+}
+
+val VariableDefinition.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun VariableDefinition.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Variable {")
+    stringBuilder.appendLine("$indent  name = $name")
+    returnType.info(stringBuilder, "$indent  ")
+    initialization?.let {
+        stringBuilder.appendLine("$indent  Initialization {")
+        it.info(stringBuilder, "$indent    ")
+        stringBuilder.appendLine("$indent  }")
+    }
+    stringBuilder.appendLine("$indent}")
+}
+
+val ReturnType.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun ReturnType.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}ReturnType {")
+    stringBuilder.appendLine("$indent  refName = ${typeDefinition.name}")
+    stringBuilder.appendLine("$indent  isPointer = ${isPointer}")
+    stringBuilder.appendLine("$indent}")
+}
+
+val Expression.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun Expression.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    when (this) {
+        is FunctionCall -> {
+            stringBuilder.appendLine("${indent}FunctionCall {")
+            stringBuilder.appendLine("$indent  refName = ${functionDefinition.name}")
+            arguments.info(stringBuilder, "$indent  ")
+            returnType.info(stringBuilder, "$indent  ")
+            stringBuilder.appendLine("$indent}")
+        }
+        is VariableCall -> {
+            stringBuilder.appendLine("${indent}VariableCall {")
+            stringBuilder.appendLine("$indent  refName = ${variableDefinition.name}")
+            parent?.info(stringBuilder, "$indent  ")
+            returnType.info(stringBuilder, "$indent  ")
+            stringBuilder.appendLine("$indent}")
+        }
+        is Number       -> {
+            stringBuilder.appendLine("${indent}Number {")
+            stringBuilder.appendLine("$indent  value = $bytes")
+            returnType.info(stringBuilder, "$indent  ")
+            stringBuilder.appendLine("$indent}")
+        }
+        is Char         -> {
+            stringBuilder.appendLine("${indent}Char {")
+            stringBuilder.appendLine("$indent  value = $value")
+            returnType.info(stringBuilder, "$indent  ")
+            stringBuilder.appendLine("$indent}")
+        }
+        is String       -> {
+            stringBuilder.appendLine("${indent}String {")
+            stringBuilder.appendLine("$indent  value = $value")
+            returnType.info(stringBuilder, "$indent  ")
+            stringBuilder.appendLine("${indent}}")
+        }
+        is Boolean      -> {
+            stringBuilder.appendLine("${indent}Boolean {")
+            stringBuilder.appendLine("$indent  value = $value")
+            returnType.info(stringBuilder, "$indent  ")
+            stringBuilder.appendLine("$indent}")
+        }
+        is Cast         -> {
+            stringBuilder.appendLine("${indent}Cast {")
+            returnType.info(stringBuilder, "$indent  ")
+            expression.info(stringBuilder, "$indent  ")
+            stringBuilder.appendLine("}")
+        }
+        else            -> throw UnsupportedOperationException()
+    }
+}
+
+val FunctionDefinition.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun FunctionDefinition.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Function {")
+    stringBuilder.appendLine("$indent  name = $name")
+    arguments.info(stringBuilder, "$indent  ")
+    returnType.info(stringBuilder, "$indent  ")
+    if (this is FunctionImplementationDefinition) {
+        code.info(stringBuilder, "$indent  ")
+    }
+    stringBuilder.appendLine("$indent}")
+}
+
+val ArgumentDefinitionScope.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun ArgumentDefinitionScope.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Arguments {")
+    children.forEach { it.info(stringBuilder, "$indent  ") }
+    stringBuilder.appendLine("$indent}")
+}
+
+val ArgumentScope.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun ArgumentScope.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Arguments {")
+    children.forEach { it.info(stringBuilder, "$indent  ") }
+    stringBuilder.appendLine("${indent}}")
+}
+
+val CodeScope.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun CodeScope.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Code {")
+    children.forEach {
+        when (it) {
+            is Expression          -> it.info(stringBuilder, "$indent  ")
+            is AssignmentStatement -> it.info(stringBuilder, "$indent  ")
+            is ReturnStatement     -> it.info(stringBuilder, "$indent  ")
+        }
+    }
+    stringBuilder.appendLine("${indent}}")
+}
+
+val AssignmentStatement.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun AssignmentStatement.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Assignment {")
+    variableCall.info(stringBuilder, "$indent  ")
+    expression.info(stringBuilder, "$indent  ")
+    stringBuilder.appendLine("$indent}")
+}
+
+val ReturnStatement.info: kotlin.String
+    get() {
+        val builder = StringBuilder()
+        info(builder)
+        return builder.toString()
+    }
+
+fun ReturnStatement.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}Return {")
+    expression.info(stringBuilder, "$indent  ")
+    stringBuilder.appendLine("$indent}")
 }

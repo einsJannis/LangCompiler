@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED")
+
 package dev.einsjannis.compiler.lexer
 
 import java.io.File

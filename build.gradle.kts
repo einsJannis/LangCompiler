@@ -44,6 +44,19 @@ sourceSets {
         dependsOn(ir)
         dependsOn(parserImpl)
     }
+    val codeGeneration by creating {
+        dependsOn(privateLib)
+        dependsOn(lexerLib)
+        dependsOn(lexerImpl)
+        dependsOn(parserLib)
+        dependsOn(ir)
+        dependsOn(parserImpl)
+        dependsOn(semanticAnalyser)
+        dependencies {
+            implementation("me.tomassetti:kllvm:0.1.0")
+        }
+    }
+
     @kotlin.Suppress("UNUSED")
     val main by getting {
         dependsOn(privateLib)
@@ -53,7 +66,9 @@ sourceSets {
         dependsOn(ir)
         dependsOn(parserImpl)
         dependsOn(semanticAnalyser)
+        dependsOn(codeGeneration)
     }
+
     @kotlin.Suppress("UNUSED")
     val test by getting {
         dependsOn(privateLib)
@@ -63,6 +78,7 @@ sourceSets {
         dependsOn(ir)
         dependsOn(parserImpl)
         dependsOn(semanticAnalyser)
+        dependsOn(codeGeneration)
     }
 }
 

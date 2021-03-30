@@ -11,7 +11,7 @@ private fun removeLines(string: String) = string.filterNot { it == '_' }
 private fun radixAndDigits(string: String) = when {
     string.startsWith("0x") -> Pair(16, removeLines(string.substring(2)))
     string.startsWith("0b") -> Pair(2, removeLines(string.substring(2)))
-    else -> Pair(10, removeLines(string))
+    else                    -> Pair(10, removeLines(string))
 }
 
 internal fun bytesFromString(string: String): ByteArray {

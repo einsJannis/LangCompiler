@@ -10,10 +10,12 @@ object Functions {
 
     object IAdd : FunctionDefinition by FunctionDefinitionImpl(
         "iAdd",
-        ArgumentDefinitionScopeImpl(listOf(
-            ArgumentDefinitionImpl("a", ReturnTypeImpl(Types.Integer, false)),
-            ArgumentDefinitionImpl("b", ReturnTypeImpl(Types.Integer, false))
-        )),
+        ArgumentDefinitionScopeImpl(
+            listOf(
+                ArgumentDefinitionImpl("a", ReturnTypeImpl(Types.Integer, false)),
+                ArgumentDefinitionImpl("b", ReturnTypeImpl(Types.Integer, false))
+            )
+        ),
         ReturnTypeImpl(Types.Integer, false)
     )
 

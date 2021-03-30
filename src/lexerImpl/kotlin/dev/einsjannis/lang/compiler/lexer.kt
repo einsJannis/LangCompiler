@@ -7,6 +7,7 @@ import java.io.File
 
 object Token {
     object Keyword {
+
         val Struct by token(Regex.fromLiteral("struct"))
         val Function by token(Regex.fromLiteral("fun"))
         val Variable by token(Regex.fromLiteral("var"))
@@ -18,6 +19,7 @@ object Token {
 
     object Symbol {
         object Brackets {
+
             val ParenthesesL by token(Regex.fromLiteral("{"))
             val ParenthesesR by token(Regex.fromLiteral("}"))
             val BracesL by token(Regex.fromLiteral("("))
@@ -45,6 +47,7 @@ object Token {
     }
 
     object Primitive {
+
         val Number by token(Regex("([0-9]+|0x[0-9a-fA-F]+|0b[01]+)(b|i|L|B[0-9]+)?"))
         val String by token(Regex("\".*\""))
         val Char by token(Regex("\'.\'"))
