@@ -106,7 +106,7 @@ fun Expression.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
         }
         is Number       -> {
             stringBuilder.appendLine("${indent}Number {")
-            stringBuilder.appendLine("$indent  value = $bytes")
+            stringBuilder.appendLine("$indent  value = ${bytes.toHexString()}")
             returnType.info(stringBuilder, "$indent  ")
             stringBuilder.appendLine("$indent}")
         }
@@ -136,6 +136,10 @@ fun Expression.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
         }
         else            -> throw UnsupportedOperationException()
     }
+}
+
+private fun ByteArray.toHexString(): kotlin.String {
+    return joinToString("") { it.toString(16).padStart(2, '0') }
 }
 
 val FunctionDefinition.info: kotlin.String
@@ -193,12 +197,22 @@ fun CodeScope.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
     stringBuilder.appendLine("${indent}Code {")
     children.forEach {
         when (it) {
+            is ConditionStatement  -> it.info(stringBuilder, "$indent  ")
             is Expression          -> it.info(stringBuilder, "$indent  ")
             is AssignmentStatement -> it.info(stringBuilder, "$indent  ")
             is ReturnStatement     -> it.info(stringBuilder, "$indent  ")
         }
     }
     stringBuilder.appendLine("${indent}}")
+}
+
+fun ConditionStatement.info(stringBuilder: StringBuilder, indent: kotlin.String = "") {
+    stringBuilder.appendLine("${indent}ConditionStatement {")
+    stringBuilder.appendLine("$indent  Condition {")
+    condition.info(stringBuilder, "$indent    ")
+    stringBuilder.appendLine("$indent  }")
+    code.info(stringBuilder, "$indent  ")
+    stringBuilder.appendLine("$indent}")
 }
 
 val AssignmentStatement.info: kotlin.String

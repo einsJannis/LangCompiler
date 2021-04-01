@@ -42,9 +42,9 @@ object Patterns {
         tupleOf(
             Token.Keyword.If.pattern,
             Token.Symbol.Brackets.BracesL.pattern,
-            Expression,
+            lazyPatternMap { Expression },
             Token.Symbol.Brackets.BracesR.pattern,
-            CodeScope
+            lazyPatternMap { CodeScope }
         ),
         { (_, _, condition, _, code) -> ConditionStatementImpl(condition, code) }
     )

@@ -3,6 +3,7 @@ package dev.einsjannis.lang.compiler.semanticAnalysis
 import dev.einsjannis.lang.compiler.ir.*
 import dev.einsjannis.lang.compiler.ir.builtin.Functions
 import dev.einsjannis.lang.compiler.ir.builtin.Types
+import dev.einsjannis.lang.compiler.ir.builtin.Variables
 import dev.einsjannis.lang.compiler.parser.internal.FunctionCallImpl
 import dev.einsjannis.lang.compiler.parser.internal.ReturnTypeImpl
 import dev.einsjannis.lang.compiler.parser.internal.VariableCallImpl
@@ -12,7 +13,7 @@ object SemanticAnalyser {
 
     fun analyse(tree: DefinitionScope) {
         val globalStructs: MutableList<TypeDefinition> = Types.all.toMutableList()
-        val globalVariables: MutableList<VariableDefinition> = mutableListOf()
+        val globalVariables: MutableList<VariableDefinition> = Variables.all.toMutableList()
         val globalFunctions: MutableList<FunctionDefinition> = Functions.all.toMutableList()
         for (definition in tree.children) {
             when (definition) {

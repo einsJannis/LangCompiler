@@ -4,6 +4,15 @@ fun f(a: Int): Int {
     return iAdd(a, c);
 };
 
+fun conditionTest(value: Byte): Unit {
+    if (value) {
+        print("value not 0");
+        return unit;
+    };
+    print("value is 0");
+    return unit;
+};
+
 fun main(): Int {
     print(iToString(f(5)));
     return 0;
