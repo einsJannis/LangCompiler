@@ -1,4 +1,4 @@
-var c: Int = 5;
+var c: Long = 5;
 
 fun f(a: Int): Int {
     return iAdd(a, c);
@@ -15,5 +15,6 @@ fun conditionTest(value: Byte): Unit {
 
 fun main(): Int {
     print(iToString(f(5)));
+    conditionTest(0b);
     return 0;
 };

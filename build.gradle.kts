@@ -52,9 +52,6 @@ sourceSets {
         dependsOn(ir)
         dependsOn(parserImpl)
         dependsOn(semanticAnalyser)
-        dependencies {
-            implementation("me.tomassetti:kllvm:0.1.0")
-        }
     }
 
     @kotlin.Suppress("UNUSED")
